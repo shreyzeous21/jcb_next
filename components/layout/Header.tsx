@@ -1,0 +1,58 @@
+"use client";
+import Image from "next/image";
+import Link from "next/link";
+import { ModeToggle } from "../ThemeToggle";
+
+import { navLinks } from "./constant";
+import MobileHeader from "./MobileHeader";
+import { usePathname } from "next/navigation";
+import { cn } from "@/lib/utils";
+import TopHeader from "./TopHeader";
+
+export default function Header() {
+  const pathname = usePathname();
+  const isActive = (href: string) => pathname === href;
+  return (
+    <div className="sticky top-0 z-50 w-full">
+      <TopHeader />
+      <header className="container mx-auto flex h-24 items-center justify-between px-4 border-b-2 border-primary bg-background/80 backdrop-blur rounded-b-xl">
+        {/* Logo */}
+        <Link href="/" className="flex items-center">
+          <Image
+            src="/jcblogo.jpg"
+            alt="JCV Parts Logo"
+            width={180}
+            height={60}
+            className="h-20 w-auto object-contain"
+            priority
+          />
+        </Link>
+
+        {/* Desktop Navigation */}
+        <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
+          {navLinks.map((item) => (
+            <Link
+              key={item.name}
+              href={item.href}
+              className={cn(
+                "relative text-muted-foreground transition-colors hover:text-primary after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:w-0 after:bg-primary after:transition-all hover:after:w-full",
+                isActive(item.href) && "text-primary",
+                isActive(item.href) && "after:w-full",
+              )}
+            >
+              {item.name}
+            </Link>
+          ))}
+        </nav>
+
+        <div className="hidden md:block">
+          <ModeToggle />
+        </div>
+
+        <div className="flex items-center gap-2 md:hidden">
+          <MobileHeader pathname={pathname} />
+        </div>
+      </header>
+    </div>
+  );
+}
