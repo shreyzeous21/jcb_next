@@ -47,7 +47,7 @@ export default function CategoryListing() {
   return (
     <div className="flex lg:flex-row flex-col gap-6 w-full">
       {/* DESKTOP FILTER */}
-      <Card className="hidden lg:block w-full lg:max-w-xs rounded-xl h-fit sticky top-24">
+      <Card className="hidden lg:block w-full lg:max-w-xs rounded-xl h-fit ">
         <CardHeader className="pb-3">
           <CardTitle className="flex items-center justify-between text-lg font-semibold">
             Filters
