@@ -1,45 +1,94 @@
 import React from "react";
-import { Card, CardTitle, CardHeader, CardContent } from "../ui/card";
-import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import { Filter, FilterX } from "lucide-react";
+import { Separator } from "../ui/separator";
+import { Label } from "../ui/label";
+import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "../ui/sheet";
+import { Button } from "../ui/button";
+
+/* Reusable Filter UI */
+function FilterContent() {
+  return (
+    <div className="space-y-6 p-4">
+      <div className="space-y-3">
+        <Label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+          Stock Status
+        </Label>
+
+        <RadioGroup defaultValue="in-stock" className="space-y-3">
+          <div className="flex items-center gap-3">
+            <RadioGroupItem value="in-stock" id="in-stock" />
+            <Label htmlFor="in-stock">In Stock</Label>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <RadioGroupItem value="out-of-stock" id="out-of-stock" />
+            <Label htmlFor="out-of-stock">Out of Stock</Label>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <RadioGroupItem value="on-sale" id="on-sale" />
+            <Label htmlFor="on-sale">On Sale</Label>
+          </div>
+        </RadioGroup>
+      </div>
+    </div>
+  );
+}
 
 export default function CategoryListing() {
   return (
-    <div className="flex lg:flex-row flex-col gap-4 w-full">
-      <Card className="lg:max-w-xs w-full flex flex-col gap-3">
-        <CardHeader>
-          <CardTitle>Stock</CardTitle>
+    <div className="flex lg:flex-row flex-col gap-6 w-full">
+      {/* DESKTOP FILTER */}
+      <Card className="hidden lg:block w-full lg:max-w-xs rounded-xl h-fit sticky top-24">
+        <CardHeader className="pb-3">
+          <CardTitle className="flex items-center justify-between text-lg font-semibold">
+            Filters
+            <FilterX className="h-4 w-4 cursor-pointer text-muted-foreground hover:text-primary transition" />
+          </CardTitle>
         </CardHeader>
-        <CardContent>
-          <RadioGroup defaultValue="option-one">
-            <div className="flex items-center gap-3">
-              <RadioGroupItem value="option-one" id="option-one" />
-              <Label htmlFor="option-one">In Stock</Label>
-            </div>
-            <div className="flex items-center gap-3">
-              <RadioGroupItem value="option-two" id="option-two" />
-              <Label htmlFor="option-two">In Sales</Label>
-            </div>
-          </RadioGroup>
-        </CardContent>
 
-        <CardHeader>
-          <CardTitle>Product Type</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <RadioGroup defaultValue="option-one">
-            <div className="flex items-center gap-3">
-              <RadioGroupItem value="option-one" id="option-one" />
-              <Label htmlFor="option-one">In Stock</Label>
-            </div>
-            <div className="flex items-center gap-3">
-              <RadioGroupItem value="option-two" id="option-two" />
-              <Label htmlFor="option-two">In Sales</Label>
-            </div>
-          </RadioGroup>
+        <Separator />
+
+        <CardContent className="p-0">
+          <FilterContent />
         </CardContent>
       </Card>
-      <Card className="w-full">Category</Card>
+
+      {/* MOBILE FILTER BUTTON */}
+      <div className="lg:hidden">
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button
+              variant="outline"
+              className="w-full flex items-center gap-2"
+            >
+              <Filter className="h-4 w-4" />
+              Filters
+            </Button>
+          </SheetTrigger>
+
+          <SheetContent side="left" className="p-0 w-[85%] sm:w-[360px]">
+            <SheetHeader className="p-4 border-b">
+              <SheetTitle>Filters</SheetTitle>
+            </SheetHeader>
+
+            <FilterContent />
+          </SheetContent>
+        </Sheet>
+      </div>
+
+      {/* PRODUCTS AREA */}
+      <Card className="w-full min-h-screen rounded-xl flex items-center justify-center text-muted-foreground">
+        Products Listing
+      </Card>
     </div>
   );
 }
