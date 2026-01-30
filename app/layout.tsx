@@ -13,20 +13,78 @@ const geistSans = Geist({
 });
 
 export const metadata: Metadata = {
-  title: "Niks Parts",
-  description: "Niks Parts is a platform for buying and selling parts for cars",
+  metadataBase: new URL("https://www.niksparts.com"),
+
+  title: {
+    default: "Niks Spares | Quality JCB Spare Parts & Accessories",
+    template: "%s | Niks Spares",
+  },
+
+  description:
+    "Niks Spares is a trusted platform for buying high-quality JCB spare parts and accessories at competitive prices across India.",
+
+  keywords: [
+    "Niks Spares",
+    "JCB Spare Parts",
+    "Auto Parts India",
+    "JCB Accessories",
+    "Vehicle Spare Parts",
+    "Automobile Parts Supplier",
+  ],
+
+  authors: [{ name: "Niks Spares" }],
+  creator: "Niks Spares",
+  publisher: "Niks Spares",
+
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
+
   icons: {
     icon: "/jcblogo.jpg",
+    apple: "/jcblogo.png",
   },
+
   openGraph: {
-    title: "Niks Parts",
+    type: "website",
+    locale: "en_IN",
+    url: "https://www.niksparts.com",
+    siteName: "Niks Parts",
+    title: "Niks Parts | Quality Car Spare Parts & Accessories",
     description:
-      "Niks Parts is a platform for buying and selling parts for cars",
-    images: "/jcblogo.jpg",
+      "Buy genuine car spare parts and accessories from Niks Parts. Trusted by customers across India.",
+    images: [
+      {
+        url: "/jcblogo.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Niks Parts - Car Spare Parts Platform",
+      },
+    ],
   },
+
   twitter: {
     card: "summary_large_image",
+    title: "Niks Parts | Quality Car Spare Parts",
+    description:
+      "Your trusted destination for car spare parts and accessories.",
+    images: ["/jcblogo.jpg"],
+    creator: "@niksparts", // optional
   },
+
+  alternates: {
+    canonical: "https://www.niksparts.com",
+  },
+
+  category: "Automotive",
 };
 
 export default function RootLayout({
