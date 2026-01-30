@@ -22,7 +22,7 @@ function FilterContent() {
           Stock Status
         </Label>
 
-        <RadioGroup defaultValue="in-stock" className="space-y-3">
+        <RadioGroup defaultValue="in-stock" className="space-y-1">
           <div className="flex items-center gap-3">
             <RadioGroupItem value="in-stock" id="in-stock" />
             <Label htmlFor="in-stock">In Stock</Label>
@@ -45,7 +45,7 @@ function FilterContent() {
           Products Type
         </Label>
 
-        <RadioGroup defaultValue="in-stock" className="space-y-3">
+        <RadioGroup defaultValue="in-stock" className="space-y-1">
           <div className="flex items-center gap-3">
             <RadioGroupItem value="in-stock" id="in-stock" />
             <Label htmlFor="in-stock">All Products</Label>
