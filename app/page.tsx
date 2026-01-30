@@ -1,4 +1,5 @@
 import About from "@/components/layout/About";
+import Benefits from "@/components/layout/Benefits";
 import HomeBanner from "@/components/layout/HomeBanner";
 import React from "react";
 
@@ -7,6 +8,7 @@ export default function Home() {
     <div className="container mx-auto min-h-screen flex-col flex gap-10 py-6 px-4">
       <HomeBanner />
       <About />
+      <Benefits />
     </div>
   );
 }
