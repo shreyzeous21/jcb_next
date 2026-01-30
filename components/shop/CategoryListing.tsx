@@ -39,6 +39,29 @@ function FilterContent() {
           </div>
         </RadioGroup>
       </div>
+
+      <div className="space-y-3">
+        <Label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+          Products Type
+        </Label>
+
+        <RadioGroup defaultValue="in-stock" className="space-y-3">
+          <div className="flex items-center gap-3">
+            <RadioGroupItem value="in-stock" id="in-stock" />
+            <Label htmlFor="in-stock">All Products</Label>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <RadioGroupItem value="out-of-stock" id="out-of-stock" />
+            <Label htmlFor="out-of-stock">4 WD Items</Label>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <RadioGroupItem value="on-sale" id="on-sale" />
+            <Label htmlFor="on-sale">On Sale</Label>
+          </div>
+        </RadioGroup>
+      </div>
     </div>
   );
 }
