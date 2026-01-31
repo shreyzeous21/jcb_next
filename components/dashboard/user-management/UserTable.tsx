@@ -24,6 +24,7 @@ export default function UserTable() {
             <TableRow>
               <TableHead>Name</TableHead>
               <TableHead>Email</TableHead>
+              <TableHead>Phone</TableHead>
               <TableHead>Role</TableHead>
             </TableRow>
           </TableHeader>
@@ -46,6 +47,7 @@ export default function UserTable() {
               <TableRow key={user.id}>
                 <TableCell>{user.name}</TableCell>
                 <TableCell>{user.email}</TableCell>
+                <TableCell>{user.phone}</TableCell>
                 <TableCell>
                   <UserRoleChange
                     userId={user.id}

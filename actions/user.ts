@@ -14,6 +14,7 @@ export async function getUsers() {
                 name: true,
                 email: true,
                 role: true,
+                phone: true,
                 image: true,
                 createdAt: true,
             },
@@ -53,6 +54,7 @@ export async function updateUserRole(id: string, role: UserRole) {
                 name: true,
                 email: true,
                 role: true,
+                phone: true,
             },
         });
 

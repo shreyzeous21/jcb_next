@@ -34,7 +34,6 @@ export default function LogoutButton() {
   return (
     <Button
       onClick={handleClick}
-      size="sm"
       variant="destructive"
       disabled={isPending}
       className="cursor-pointer"
