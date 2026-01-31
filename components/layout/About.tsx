@@ -8,7 +8,7 @@ export default function About() {
       {/* Logo */}
       <div className="flex justify-center md:justify-start md:w-1/3">
         <Image
-          src="/jcblogo.jpg" // adjust if needed
+          src="/jcblogo.png" // adjust if needed
           alt="NIKS Spare Parts Logo"
           width={1000}
           height={1000}

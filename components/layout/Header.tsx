@@ -8,8 +8,13 @@ import MobileHeader from "./MobileHeader";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import TopHeader from "./TopHeader";
+import GoogleButton from "./GoogleButton";
+import { authClient } from "@/lib/auth-client";
+import { Button } from "../ui/button";
+import LogoutButton from "./LogoutButton";
 
 export default function Header() {
+  const { data: session } = authClient.useSession();
   const pathname = usePathname();
   const isActive = (href: string) => pathname === href;
   return (
@@ -19,7 +24,7 @@ export default function Header() {
         {/* Logo */}
         <Link href="/" className="flex items-center">
           <Image
-            src="/jcblogo.jpg"
+            src="/jcblogo.png"
             alt="JCV Parts Logo"
             width={180}
             height={60}
@@ -45,8 +50,13 @@ export default function Header() {
           ))}
         </nav>
 
-        <div className="hidden md:block">
+        <div className="hidden md:flex space-x-2">
           <ModeToggle />
+          {!session?.user ? (
+            <GoogleButton />
+          ) : (
+            <LogoutButton />
+          )}
         </div>
 
         <div className="flex items-center gap-2 md:hidden">

@@ -18,9 +18,9 @@ const gradients = [
 
 export default function Benefits() {
   return (
-    <Card className="w-full rounded-2xl border bg-background">
+    <Card className="w-full border-none bg-background">
       <CardHeader className="text-center space-y-2">
-        <CardTitle className="text-3xl font-bold">
+        <CardTitle className="text-3xl  font-bold">
           Benefits Of <span className="text-primary">Niks Parts</span>
         </CardTitle>
         <CardDescription className="max-w-xl mx-auto">
@@ -29,7 +29,7 @@ export default function Benefits() {
         </CardDescription>
       </CardHeader>
 
-      <CardContent>
+      <CardContent className="p-0">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {benefits.map((benefit, index) => {
             const Icon = benefit.Icon;
