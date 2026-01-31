@@ -22,6 +22,14 @@ model Contact {
   createdAt DateTime @default(now())
 }
 
+model Newsletter {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  createdAt DateTime @default(now())
+
+  @@map("newsletters")
+}
+
 model User {
   id            String    @id @default(cuid())
   name          String
@@ -105,7 +113,7 @@ model Category {
 model Product {
   id      String      @id @default(cuid())
   name    String
-  slug    String    @unique
+  slug    String      @unique
   image   String
   stock   StockStatus
   partNo  String

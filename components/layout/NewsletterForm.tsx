@@ -3,25 +3,30 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useNewsletter } from "@/hooks/use-newsletter";
 
 export default function NewsletterForm() {
   const [email, setEmail] = useState("");
-  const [status, setStatus] = useState<
-    "idle" | "loading" | "success" | "error"
-  >("idle");
+  const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
+  const { postNewsletterMutation } = useNewsletter();
+  const isPending = postNewsletterMutation.isPending;
 
-  async function handleSubmit(e: React.FormEvent) {
+  function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!email.trim()) return;
-    setStatus("loading");
-    try {
-      // Replace with your newsletter API / server action
-      await new Promise((r) => setTimeout(r, 800));
-      setEmail("");
-      setStatus("success");
-    } catch {
-      setStatus("error");
-    }
+    const trimmed = email.trim();
+    if (!trimmed) return;
+    setStatus("idle");
+    postNewsletterMutation.mutate(trimmed, {
+      onSuccess: (result) => {
+        if (result.success) {
+          setEmail("");
+          setStatus("success");
+        } else {
+          setStatus("error");
+        }
+      },
+      onError: () => setStatus("error"),
+    });
   }
 
   return (
@@ -31,8 +36,11 @@ export default function NewsletterForm() {
           type="email"
           placeholder="Enter your email"
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          disabled={status === "loading"}
+          onChange={(e) => {
+            setEmail(e.target.value);
+            setStatus("idle");
+          }}
+          disabled={isPending}
           className="h-10 flex-1 min-w-0 bg-background"
           required
           aria-label="Email for newsletter"
@@ -41,19 +49,19 @@ export default function NewsletterForm() {
           type="submit"
           size="lg"
           className="h-10 shrink-0 px-6"
-          disabled={status === "loading"}
+          disabled={isPending}
         >
-          {status === "loading" ? "Subscribing…" : "Subscribe"}
+          {isPending ? "Subscribing…" : "Subscribe"}
         </Button>
       </form>
       {status === "success" && (
         <p className="text-sm text-primary">
-          Thanks! Check your inbox to confirm.
+          Thanks! You’re subscribed to our newsletter.
         </p>
       )}
       {status === "error" && (
         <p className="text-sm text-destructive">
-          Something went wrong. Please try again.
+          {postNewsletterMutation.error?.message}
         </p>
       )}
     </div>

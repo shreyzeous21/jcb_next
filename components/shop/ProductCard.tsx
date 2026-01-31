@@ -69,7 +69,7 @@ export default function ProductCard({
         {/* CATEGORY PILL */}
         <div>
           <span className="inline-flex items-center rounded-full bg-muted px-2.5 py-0.5 text-xs font-medium text-muted-foreground">
-            {product.category.name}
+            Category: {product.category.name}
           </span>
         </div>
       </div>
