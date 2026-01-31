@@ -1,13 +1,9 @@
 "use client";
 
 import React, { useMemo, useState } from "react";
-import Image from "next/image";
-import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Filter, FilterX } from "lucide-react";
 import { Separator } from "../ui/separator";
-import { Label } from "../ui/label";
-import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import {
   Sheet,
   SheetContent,
@@ -16,79 +12,10 @@ import {
   SheetTrigger,
 } from "../ui/sheet";
 import { Button } from "../ui/button";
-import { Badge } from "../ui/badge";
 import { useCategory } from "@/hooks/use-category";
 import { useProduct } from "@/hooks/use-product";
-
-/* Reusable Filter UI */
-function FilterContent({
-  stockStatus,
-  setStockStatus,
-  categoryId,
-  setCategoryId,
-}: {
-  stockStatus: string;
-  setStockStatus: (v: string) => void;
-  categoryId: string;
-  setCategoryId: (v: string) => void;
-}) {
-  const { categories, isLoading } = useCategory();
-
-  return (
-    <div className="space-y-6 p-4">
-      {/* STOCK STATUS */}
-      <div className="space-y-3">
-        <Label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-          Stock Status
-        </Label>
-
-        <RadioGroup
-          value={stockStatus}
-          onValueChange={setStockStatus}
-          className="space-y-1"
-        >
-          {[
-            { value: "in-stock", label: "In Stock" },
-            { value: "out-of-stock", label: "Out of Stock" },
-          ].map((item) => (
-            <div key={item.value} className="flex items-center gap-3">
-              <RadioGroupItem value={item.value} id={item.value} />
-              <Label htmlFor={item.value}>{item.label}</Label>
-            </div>
-          ))}
-        </RadioGroup>
-      </div>
-
-      {/* CATEGORY */}
-      <div className="space-y-3">
-        <Label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-          Product Type
-        </Label>
-
-        {isLoading ? (
-          <p className="text-sm text-muted-foreground">Loading categories...</p>
-        ) : (
-          <RadioGroup
-            value={categoryId}
-            onValueChange={setCategoryId}
-            className="space-y-1"
-          >
-            <div className="flex items-center gap-3">
-              <RadioGroupItem value="" id="category-all" />
-              <Label htmlFor="category-all">All</Label>
-            </div>
-            {categories.map((category) => (
-              <div key={category.id} className="flex items-center gap-3">
-                <RadioGroupItem value={category.id} id={category.id} />
-                <Label htmlFor={category.id}>{category.name}</Label>
-              </div>
-            ))}
-          </RadioGroup>
-        )}
-      </div>
-    </div>
-  );
-}
+import FilterContent from "./FilterContent";
+import ProductCard from "./ProductCard";
 
 const STOCK_FILTER_MAP = {
   "in-stock": "IN_STOCK" as const,
@@ -220,39 +147,7 @@ export default function CategoryListing() {
         {!productsLoading && !productsError && filteredProducts.length > 0 && (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {filteredProducts.map((product) => (
-              <Link
-                key={product.id}
-                href={`/shop/${product.id}`}
-                className="group rounded-lg border bg-card p-4 text-card-foreground shadow-sm transition hover:shadow-md hover:border-primary/50"
-              >
-                <div className="relative aspect-square w-full overflow-hidden rounded-md bg-muted mb-3">
-                  <Image
-                    src={product.image}
-                    alt={product.name}
-                    fill
-                    className="object-cover transition group-hover:scale-105"
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                    unoptimized
-                  />
-                </div>
-                <h3 className="font-semibold line-clamp-2 group-hover:text-primary">
-                  {product.name}
-                </h3>
-                <p className="text-xs text-muted-foreground mt-0.5">
-                  {product.partNo} · {product.nksCode}
-                </p>
-                <p className="text-xs text-muted-foreground">
-                  {product.category.name}
-                </p>
-                <Badge
-                  variant={
-                    product.stock === "IN_STOCK" ? "default" : "secondary"
-                  }
-                  className="mt-2"
-                >
-                  {product.stock === "IN_STOCK" ? "In stock" : "Out of stock"}
-                </Badge>
-              </Link>
+              <ProductCard key={product.id} product={product} />
             ))}
           </div>
         )}

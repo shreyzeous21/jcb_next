@@ -53,6 +53,7 @@ const STOCK_OPTIONS = [
 
 const emptyForm: ProductInput = {
   name: "",
+  slug: "",
   image: "",
   partNo: "",
   nksCode: "",
@@ -104,6 +105,7 @@ export default function ProductListing() {
     setEditId(product.id);
     setEditForm({
       name: product.name,
+      slug: product.slug,
       image: product.image,
       partNo: product.partNo,
       nksCode: product.nksCode,
@@ -117,12 +119,16 @@ export default function ProductListing() {
     e.preventDefault();
     if (!editId) return;
     const name = editForm.name.trim();
+    const slug = editForm.slug?.trim();
     const image = editForm.image.trim();
     const partNo = editForm.partNo.trim();
     const nksCode = editForm.nksCode.trim();
     if (!name || !image || !partNo || !nksCode || !editForm.categoryId) return;
     updateProduct.mutate(
-      { id: editId, input: { ...editForm, name, image, partNo, nksCode } },
+      {
+        id: editId,
+        input: { ...editForm, name, slug, image, partNo, nksCode },
+      },
       {
         onSuccess: () => {
           setEditId(null);
@@ -178,6 +184,20 @@ export default function ProductListing() {
                   }
                   placeholder="Product name"
                   required
+                  disabled={createProduct.isPending}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="add-slug">
+                  Slug (optional, auto from name)
+                </Label>
+                <Input
+                  id="add-slug"
+                  value={addForm.slug ?? ""}
+                  onChange={(e) =>
+                    setAddForm((p) => ({ ...p, slug: e.target.value }))
+                  }
+                  placeholder="Leave empty to auto-generate from name"
                   disabled={createProduct.isPending}
                 />
               </div>
@@ -305,6 +325,7 @@ export default function ProductListing() {
               <TableRow>
                 <TableHead className="w-[64px]">Image</TableHead>
                 <TableHead>Name</TableHead>
+                <TableHead>Slug</TableHead>
                 <TableHead>Part No</TableHead>
                 <TableHead>NKS Code</TableHead>
                 <TableHead>Stock</TableHead>
@@ -328,6 +349,9 @@ export default function ProductListing() {
                     </div>
                   </TableCell>
                   <TableCell>{product.name}</TableCell>
+                  <TableCell className="text-muted-foreground text-sm font-mono">
+                    {product.slug}
+                  </TableCell>
                   <TableCell>{product.partNo}</TableCell>
                   <TableCell>{product.nksCode}</TableCell>
                   <TableCell>{product.stock.replace("_", " ")}</TableCell>
@@ -378,6 +402,18 @@ export default function ProductListing() {
                 }
                 placeholder="Product name"
                 required
+                disabled={updateProduct.isPending}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="edit-slug">Slug (optional, auto from name)</Label>
+              <Input
+                id="edit-slug"
+                value={editForm.slug ?? ""}
+                onChange={(e) =>
+                  setEditForm((p) => ({ ...p, slug: e.target.value }))
+                }
+                placeholder="Leave empty to auto-generate from name"
                 disabled={updateProduct.isPending}
               />
             </div>

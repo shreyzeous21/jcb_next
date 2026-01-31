@@ -64,3 +64,15 @@ export async function sendContactEmail(
         return { success: false, error: "Failed to send message" };
     }
 }
+
+export async function getContacts() {
+    try {
+        const contacts = await prisma.contact.findMany({
+            orderBy: { createdAt: "desc" },
+        });
+        return { success: true, contacts };
+    } catch (error) {
+        console.error("Get contacts error:", error);
+        return { success: false, error: "Failed to get contacts" };
+    }
+}

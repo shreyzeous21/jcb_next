@@ -37,7 +37,7 @@ export default function NavUser({ user }: Props) {
           <span className="text-sm font-medium">{user?.name ?? "User"}</span>
 
           {user?.role && (
-            <Badge variant="secondary" className="text-xs">
+            <Badge variant="destructive" className="text-xs">
               {user.role}
             </Badge>
           )}
