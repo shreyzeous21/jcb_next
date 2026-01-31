@@ -8,15 +8,18 @@ import MobileHeader from "./MobileHeader";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import TopHeader from "./TopHeader";
-import GoogleButton from "./GoogleButton";
+import GoogleButton from "../GoogleButton";
 import { authClient } from "@/lib/auth-client";
-import { Button } from "../ui/button";
-import LogoutButton from "./LogoutButton";
+import LogoutButton from "../LogoutButton";
 
 export default function Header() {
   const { data: session } = authClient.useSession();
   const pathname = usePathname();
   const isActive = (href: string) => pathname === href;
+  const isDashboard = pathname.startsWith("/dashboard");
+  if (isDashboard) {
+    return null;
+  }
   return (
     <div className="sticky top-0 z-50 w-full">
       <TopHeader />
@@ -34,7 +37,7 @@ export default function Header() {
         </Link>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
+        <nav className="hidden lg:flex items-center gap-6 text-sm font-medium">
           {navLinks.map((item) => (
             <Link
               key={item.name}
@@ -52,15 +55,11 @@ export default function Header() {
 
         <div className="hidden md:flex space-x-2">
           <ModeToggle />
-          {!session?.user ? (
-            <GoogleButton />
-          ) : (
-            <LogoutButton />
-          )}
+          {!session?.user ? <GoogleButton /> : <LogoutButton />}
         </div>
 
         <div className="flex items-center gap-2 md:hidden">
-          <MobileHeader pathname={pathname} />
+          <MobileHeader pathname={pathname} session={session} />
         </div>
       </header>
     </div>

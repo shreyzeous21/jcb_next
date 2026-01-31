@@ -6,6 +6,7 @@ import { Toaster } from "@/components/ui/sonner";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import WhatsappButton from "@/components/layout/WhatsappButton";
+import QueryProvider from "./QueryProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -98,18 +99,20 @@ export default function RootLayout({
         className={`${geistSans.variable}  antialiased`}
         suppressHydrationWarning
       >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="dark"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <Header />
-          {children}
-          <WhatsappButton />
-          <Footer />
-          <Toaster richColors position="top-right" />
-        </ThemeProvider>
+        <QueryProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="dark"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <Header />
+            {children}
+            <WhatsappButton />
+            <Footer />
+            <Toaster richColors position="top-right" />
+          </ThemeProvider>
+        </QueryProvider>
       </body>
     </html>
   );

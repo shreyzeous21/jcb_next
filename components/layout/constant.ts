@@ -79,3 +79,26 @@ export const benefits = [
         Icon: FaShieldAlt,
     },
 ]
+
+export const WEBSITE_NAME = "JCV Parts";
+export const WEBSITE_LOGO = "/jcblogo.png";
+
+export const DASHBOARD_MENU_ITEMS = [
+    {
+        name: "User Management",
+        href: "/dashboard/user-management",
+        role: "SUPERADMIN",
+    },
+    {
+        name: "Categories",
+        href: "/dashboard/categories",
+    },
+    {
+        name: "Products",
+        href: "/dashboard/products",
+    },
+    {
+        name: "Contacts",
+        href: "/dashboard/contacts",
+    },
+]

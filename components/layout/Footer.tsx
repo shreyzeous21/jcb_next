@@ -1,10 +1,17 @@
+"use client";
 import Image from "next/image";
 import Link from "next/link";
 import { navLinks } from "./constant";
 import NewsletterForm from "./NewsletterForm";
 import { Mail, Map, Phone } from "lucide-react";
+import { usePathname } from "next/navigation";
 
 export default function Footer() {
+  const pathname = usePathname();
+
+  if (pathname.startsWith("/dashboard")) {
+    return null;
+  }
   return (
     <footer className="border-t border-border bg-muted/30">
       <div className="container mx-auto px-4 py-6">

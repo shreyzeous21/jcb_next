@@ -12,8 +12,16 @@ import { Mail, MenuIcon, Phone } from "lucide-react";
 import { navLinks } from "./constant";
 import Link from "next/link";
 import { ModeToggle } from "../ThemeToggle";
+import GoogleButton from "../GoogleButton";
+import LogoutButton from "../LogoutButton";
 
-export default function MobileHeader({ pathname }: { pathname?: string }) {
+export default function MobileHeader({
+  pathname,
+  session,
+}: {
+  pathname?: string;
+  session?: any;
+}) {
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -53,8 +61,8 @@ export default function MobileHeader({ pathname }: { pathname?: string }) {
         <SheetFooter className="flex flex-col gap-4 border-t border-primary pt-4">
           {/* Theme Toggle */}
           <div className="flex items-center justify-between">
-            <span className="text-xs text-muted-foreground">Appearance</span>
             <ModeToggle />
+            {!session?.user ? <GoogleButton /> : <LogoutButton />}
           </div>
 
           {/* Contact Info */}

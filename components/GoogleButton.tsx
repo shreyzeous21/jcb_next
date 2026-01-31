@@ -1,7 +1,7 @@
 "use client";
 
 import { authClient } from "@/lib/auth-client";
-import { Button } from "../ui/button";
+import { Button } from "@/components/ui/button";
 import { FcGoogle } from "react-icons/fc";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
