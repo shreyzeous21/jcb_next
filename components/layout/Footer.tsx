@@ -14,7 +14,7 @@ export default function Footer() {
   }
   return (
     <footer className="border-t border-border bg-muted/30">
-      <div className="container mx-auto px-4 py-6">
+      <div className=" mx-auto px-4 py-6">
         <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-4 lg:gap-12">
           {/* Brand */}
           <div className="lg:col-span-1 flex flex-col gap-4">
@@ -23,7 +23,7 @@ export default function Footer() {
               className="inline-flex focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-md"
             >
               <Image
-                src="/jcblogo.jpg"
+                src="/jcblogo.png"
                 alt="Niks Spares – JCB Parts"
                 width={140}
                 height={140}
