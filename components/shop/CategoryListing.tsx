@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Filter, FilterX } from "lucide-react";
 import { Separator } from "../ui/separator";
@@ -24,8 +25,29 @@ const STOCK_FILTER_MAP = {
 };
 
 export default function CategoryListing() {
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const router = useRouter();
+  const categoryFromUrl = searchParams.get("category") ?? "";
+
   const [stockStatus, setStockStatus] = useState("in-stock");
-  const [categoryId, setCategoryId] = useState("");
+  const [categoryId, setCategoryIdState] = useState(categoryFromUrl);
+
+  // Sync category filter when URL changes (e.g. coming from home category link)
+  useEffect(() => {
+    setCategoryIdState(categoryFromUrl);
+  }, [categoryFromUrl]);
+
+  const setCategoryId = (id: string) => {
+    setCategoryIdState(id);
+    const params = new URLSearchParams(searchParams.toString());
+    if (id) params.set("category", id);
+    else params.delete("category");
+    const query = params.toString();
+    router.replace(query ? `${pathname}?${query}` : pathname, {
+      scroll: false,
+    });
+  };
 
   const {
     products,
