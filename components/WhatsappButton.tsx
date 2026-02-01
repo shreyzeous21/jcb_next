@@ -14,9 +14,9 @@ export default function WhatsappButton() {
     >
       <Button
         size="icon"
-        className="h-14 w-14 rounded-full bg-green-500 hover:bg-green-600 shadow-lg"
+        className="h-12 w-12 rounded-full bg-green-500 hover:bg-green-600 shadow-lg"
       >
-        <FaWhatsapp className="size-10 text-white" />
+        <FaWhatsapp className="size-8 text-white" />
       </Button>
     </Link>
   );
