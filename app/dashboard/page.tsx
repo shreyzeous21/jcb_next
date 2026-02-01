@@ -1,7 +1,6 @@
-import React from 'react'
+import Charts from "@/components/dashboard/Charts";
+import React from "react";
 
 export default function page() {
-  return (
-    <div>page</div>
-  )
+  return <Charts />;
 }

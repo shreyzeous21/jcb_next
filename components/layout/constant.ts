@@ -84,6 +84,7 @@ export const WEBSITE_NAME = "JCV Parts";
 export const WEBSITE_LOGO = "/jcblogo.png";
 
 export const DASHBOARD_MENU_ITEMS = [
+
     {
         name: "User Management",
         href: "/dashboard/user-management",
@@ -100,5 +101,9 @@ export const DASHBOARD_MENU_ITEMS = [
     {
         name: "Contacts",
         href: "/dashboard/contacts",
+    },
+    {
+        name: "Newsletter",
+        href: "/dashboard/newsletter",
     },
 ]

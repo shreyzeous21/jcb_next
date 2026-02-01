@@ -32,7 +32,9 @@ export async function postNewsletter(email: string) {
 
 export async function getNewsletter() {
   try {
-    const newsletters = await prisma.newsletter.findMany();
+    const newsletters = await prisma.newsletter.findMany({
+      orderBy: { createdAt: "desc" },
+    });
     return { success: true, data: newsletters };
   } catch (error) {
     console.log("getNewsletter error:", error);

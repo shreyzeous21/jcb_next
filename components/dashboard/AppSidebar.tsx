@@ -27,14 +27,16 @@ export default function AppSidebar({ session }: { session: any }) {
     <Sidebar className="border-r">
       {/* Logo */}
       <SidebarHeader className="flex items-center justify-center ">
-        <Image
-          src={WEBSITE_LOGO}
-          alt="Logo"
-          width={100}
-          height={100}
-          className="h-10 w-auto object-contain"
-          priority
-        />
+        <Link href="/dashboard">
+          <Image
+            src={WEBSITE_LOGO}
+            alt="Logo"
+            width={100}
+            height={100}
+            className="h-10 w-auto object-contain"
+            priority
+          />
+        </Link>
       </SidebarHeader>
 
       <Separator />

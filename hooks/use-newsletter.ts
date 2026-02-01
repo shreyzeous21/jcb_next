@@ -5,16 +5,18 @@ import { toast } from "sonner";
 export const useNewsletter = () => {
   const queryClient = useQueryClient();
 
-  const {
-    data,
-    isLoading,
-    error,
-  } = useQuery({
+  const query = useQuery({
     queryKey: ["newsletter"],
-    queryFn: async () => await getNewsletter(),
+    queryFn: async () => {
+      const res = await getNewsletter();
+      if (!res.success) throw new Error(res.message);
+      return res.data;
+    },
   });
 
-  const newsletters = data?.data || [];
+  const newsletters = query.data ?? [];
+  const isLoading = query.isLoading;
+  const error = query.error;
 
   const postNewsletterMutation = useMutation({
     mutationFn: async (email: string) => await postNewsletter(email),

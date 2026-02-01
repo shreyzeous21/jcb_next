@@ -23,7 +23,7 @@ export default function Header() {
   return (
     <div className="sticky top-0 z-50 w-full">
       <TopHeader />
-      <header className=" mx-auto flex h-24 items-center justify-between px-4 border-b-2 border-primary bg-background/80 backdrop-blur rounded-b-xl">
+      <header className=" mx-auto flex h-18 items-center justify-between px-4 border-b-2 border-primary bg-background/80 backdrop-blur rounded-b-xl">
         {/* Logo */}
         <Link href="/" className="flex items-center">
           <Image
@@ -31,7 +31,7 @@ export default function Header() {
             alt="JCV Parts Logo"
             width={180}
             height={60}
-            className="h-20 w-auto object-contain"
+            className="h-16 w-auto object-contain"
             priority
           />
         </Link>
