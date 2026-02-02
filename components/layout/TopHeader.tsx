@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export default function TopHeader() {
   return (
-    <div className="hidden lg:block w-full bg-black border-b">
+    <div className="hidden lg:block w-full bg-background border-b">
       <div className=" mx-auto px-4">
         <nav className="flex h-10 items-center justify-between text-sm">
           {/* Left: Contact Info */}

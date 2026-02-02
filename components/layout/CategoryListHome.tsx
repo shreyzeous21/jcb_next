@@ -36,7 +36,7 @@ export default function CategoryListHome() {
   }
 
   return (
-    <Card className="overflow-hidden border-primary/10">
+    <Card className="overflow-hidden bg-transparent border-none p-0">
       <CardHeader className="space-y-1 pb-4">
         <div className="flex items-center gap-2">
           <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 text-primary">
@@ -51,17 +51,24 @@ export default function CategoryListHome() {
         </p>
       </CardHeader>
       <CardContent>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+        <div className="flex flex-wrap gap-4">
           {categories.map((category) => (
             <Link
               key={category.id}
               href={`/shop?category=${category.id}`}
-              className="group flex items-center justify-between gap-3 rounded-lg border bg-card px-4 py-3.5 text-left shadow-sm transition-all duration-200 hover:border-primary/40 hover:bg-primary/5 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+              className="group flex items-center gap-2 rounded-xl border border-primary/10 bg-background px-2 py-1
+                 transition-all duration-300 ease-out
+                 hover:border-primary/30 hover:bg-primary/5 hover:shadow-md hover:-translate-y-0.5"
             >
-              <span className="font-medium text-foreground group-hover:text-primary transition-colors">
+              <span className="font-medium text-foreground transition-colors duration-300 group-hover:text-primary">
                 {category.name}
               </span>
-              <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200 group-hover:translate-x-0.5 group-hover:text-primary" />
+
+              <ChevronRight
+                className="h-4 w-4 shrink-0 text-muted-foreground
+                   transition-all duration-300
+                   group-hover:translate-x-1 group-hover:text-primary"
+              />
             </Link>
           ))}
         </div>
