@@ -102,4 +102,8 @@ export const DASHBOARD_MENU_ITEMS = [
         name: "Newsletter",
         href: "/dashboard/newsletter",
     },
+    {
+        name: "Enquiries",
+        href: "/dashboard/enquiries",
+    },
 ]

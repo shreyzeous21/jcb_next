@@ -11,9 +11,11 @@ import {
 import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
 import { cn } from "@/lib/utils";
+import ContactEnquiry from "../ContactEnquiry";
 
 type SingleProductProps = {
   product: {
+    id: string;
     name: string;
     slug: string;
     image: string;
@@ -28,98 +30,86 @@ export default function SingleProduct({ product }: SingleProductProps) {
   const inStock = product.stock === "IN_STOCK";
 
   return (
-    <section className="mx-auto max-w-6xl space-y-8">
-      {/* BACK LINK */}
+    <section className="mx-auto max-w-4xl space-y-8">
+      {/* BACK */}
       <Link
         href="/shop"
-        className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground transition hover:text-primary"
+        className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-primary"
       >
         <ArrowLeft className="h-4 w-4" />
         Back to Products
       </Link>
 
-      <div className="grid gap-10 lg:grid-cols-2">
-        {/* IMAGE HERO */}
-        <Card className="group relative overflow-hidden rounded-3xl border bg-muted shadow-sm">
-          <div className="relative aspect-square">
-            <Image
-              src={product.image}
-              alt={product.name}
-              fill
-              priority
-              className="object-cover transition-transform duration-700 group-hover:scale-110"
-              sizes="(max-width: 768px) 100vw, 50vw"
-              unoptimized
-            />
+      <Card className="rounded-2xl border shadow-sm">
+        <CardContent className="flex flex-col gap-8 p-6">
+          {/* IMAGE */}
+          <div className="flex justify-center">
+            <div className="relative w-64 aspect-square overflow-hidden rounded-xl border bg-muted">
+              <Image
+                src={product.image}
+                alt={product.name}
+                fill
+                className="object-cover"
+                sizes="256px"
+                unoptimized
+              />
 
-            {/* SUBTLE GRADIENT */}
-            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/30 via-black/5 to-transparent" />
-
-            {/* STOCK BADGE */}
-            <Badge
-              className={cn(
-                "absolute left-5 top-5 rounded-full px-4 py-1 text-xs font-semibold tracking-wide shadow-lg backdrop-blur",
-                inStock
-                  ? "bg-emerald-600/90 text-white"
-                  : "bg-zinc-900/90 text-white"
-              )}
-            >
-              {product.stock.replace("_", " ")}
-            </Badge>
-          </div>
-        </Card>
-
-        {/* PRODUCT DETAILS */}
-        <Card className="rounded-3xl border bg-card shadow-sm">
-          <CardHeader className="space-y-2 pb-4">
-            <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              {product.category.name}
-            </span>
-
-            <CardTitle className="text-3xl font-bold leading-tight">
-              {product.name}
-            </CardTitle>
-
-            <p className="text-sm text-muted-foreground">
-              {product.slug}
-            </p>
-          </CardHeader>
-
-          <CardContent className="space-y-4 text-sm">
-            <div className="flex items-center justify-between rounded-lg bg-muted/40 px-4 py-3">
-              <span className="text-muted-foreground">Part No</span>
-              <span className="font-semibold">{product.partNo}</span>
-            </div>
-
-            <div className="flex items-center justify-between rounded-lg bg-muted/40 px-4 py-3">
-              <span className="text-muted-foreground">NKS Code</span>
-              <span className="font-semibold">{product.nksCode}</span>
-            </div>
-
-            <div className="flex items-center justify-between rounded-lg bg-muted/40 px-4 py-3">
-              <span className="text-muted-foreground">Availability</span>
-              <span
+              <Badge
                 className={cn(
-                  "font-semibold",
-                  inStock ? "text-emerald-600" : "text-red-500"
+                  "absolute left-3 top-3 px-3 py-1 text-xs",
+                  inStock
+                    ? "bg-emerald-600 text-white"
+                    : "bg-zinc-900 text-white",
                 )}
               >
                 {product.stock.replace("_", " ")}
-              </span>
+              </Badge>
             </div>
-          </CardContent>
+          </div>
 
-          <CardFooter className="pt-6">
-            <Button
-              variant="default"
-              size="lg"
-              className="w-full"
-            >
-              Contact for Enquiry
-            </Button>
-          </CardFooter>
-        </Card>
-      </div>
+          {/* TITLE */}
+          <div className="text-center space-y-1">
+            <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+              {product.category.name}
+            </p>
+            <h1 className="text-2xl font-bold">{product.name}</h1>
+            <p className="text-sm text-muted-foreground">{product.slug}</p>
+          </div>
+
+          {/* SPEC TABLE */}
+          <div className="overflow-hidden rounded-xl border">
+            <div className="divide-y">
+              <SpecRow label="Part Number" value={product.partNo} />
+              <SpecRow label="NKS Code" value={product.nksCode} />
+              <SpecRow
+                label="Availability"
+                value={product.stock.replace("_", " ")}
+                valueClass={inStock ? "text-emerald-600" : "text-red-500"}
+              />
+            </div>
+          </div>
+
+          <ContactEnquiry product={product} />
+        </CardContent>
+      </Card>
     </section>
+  );
+}
+
+/* SMALL HELPER COMPONENT */
+function SpecRow({
+  label,
+  value,
+  valueClass,
+}: {
+  label: string;
+  value: string;
+  valueClass?: string;
+}) {
+  return (
+    <div className="flex items-center justify-between px-4 py-3 text-sm">
+      <span className="text-muted-foreground">{label}</span>
+      <span className={cn("font-medium", valueClass)}>{value}</span>
+    </div>
   );
 }
