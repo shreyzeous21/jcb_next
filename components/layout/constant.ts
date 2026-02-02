@@ -26,10 +26,6 @@ export const navLinks = [
         href: "/shop",
     },
     {
-        name: "Events",
-        href: "/events",
-    },
-    {
         name: "Contact Us",
         href: "/contact-us",
     },
