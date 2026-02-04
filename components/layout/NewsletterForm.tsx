@@ -41,14 +41,11 @@ export default function NewsletterForm() {
             setStatus("idle");
           }}
           disabled={isPending}
-          className="h-10 flex-1 min-w-0 bg-background"
           required
           aria-label="Email for newsletter"
         />
         <Button
           type="submit"
-          size="lg"
-          className="h-10 shrink-0 px-6"
           disabled={isPending}
         >
           {isPending ? "Subscribing…" : "Subscribe"}

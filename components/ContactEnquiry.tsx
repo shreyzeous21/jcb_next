@@ -22,6 +22,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import GoogleButton from "./GoogleButton";
 
 const enquirySchema = z.object({
   quantity: z.number().int().min(1, "Quantity must be at least 1"),
@@ -81,7 +82,7 @@ export default function ContactEnquiry({ product }: ContactEnquiryProps) {
     return (
       <div className="space-y-4">
         <Separator />
-        <div className="rounded-xl border border-amber-200 bg-amber-50/50 dark:border-amber-900/50 dark:bg-amber-950/20 p-6 text-center">
+        <div className="rounded-xl border flex flex-col items-center justify-center border-amber-200 bg-amber-50/50 dark:border-amber-900/50 dark:bg-amber-950/20 p-6 text-center">
           <MessageCircle className="mx-auto h-10 w-10 text-amber-600 dark:text-amber-500 mb-3" />
           <h3 className="font-semibold text-foreground mb-1">
             Send an enquiry
@@ -90,12 +91,7 @@ export default function ContactEnquiry({ product }: ContactEnquiryProps) {
             Sign in to request a quote or ask about this product. Only logged-in
             users can submit enquiries.
           </p>
-          <Button asChild variant="default" className="gap-2">
-            <Link href="/" className="inline-flex items-center">
-              <LogIn className="h-4 w-4" />
-              Sign in to send enquiry
-            </Link>
-          </Button>
+          <GoogleButton />
         </div>
       </div>
     );
