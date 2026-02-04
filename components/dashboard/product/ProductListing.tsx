@@ -277,50 +277,52 @@ export default function ProductListing() {
                   />
                 </div>
               </div>
-              <div className="space-y-2">
-                <Label>Stock</Label>
-                <Select
-                  value={addForm.stock}
-                  onValueChange={(v) =>
-                    setAddForm((p) => ({
-                      ...p,
-                      stock: v as ProductInput["stock"],
-                    }))
-                  }
-                  disabled={createProduct.isPending}
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {STOCK_OPTIONS.map((o) => (
-                      <SelectItem key={o.value} value={o.value}>
-                        {o.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="space-y-2">
-                <Label>Category</Label>
-                <Select
-                  value={addForm.categoryId}
-                  onValueChange={(v) =>
-                    setAddForm((p) => ({ ...p, categoryId: v }))
-                  }
-                  disabled={createProduct.isPending}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select category" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {categories.map((c) => (
-                      <SelectItem key={c.id} value={c.id}>
-                        {c.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+              <div className="grid grid-cols-2 w-full">
+                <div className="space-y-2">
+                  <Label>Stock</Label>
+                  <Select
+                    value={addForm.stock}
+                    onValueChange={(v) =>
+                      setAddForm((p) => ({
+                        ...p,
+                        stock: v as ProductInput["stock"],
+                      }))
+                    }
+                    disabled={createProduct.isPending}
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {STOCK_OPTIONS.map((o) => (
+                        <SelectItem key={o.value} value={o.value}>
+                          {o.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label>Category</Label>
+                  <Select
+                    value={addForm.categoryId}
+                    onValueChange={(v) =>
+                      setAddForm((p) => ({ ...p, categoryId: v }))
+                    }
+                    disabled={createProduct.isPending}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select category" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {categories.map((c) => (
+                        <SelectItem key={c.id} value={c.id}>
+                          {c.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
               {/* PDF (optional) - Add */}
               <div className="rounded-xl border border-dashed bg-muted/30 p-4 space-y-3">
@@ -439,6 +441,7 @@ export default function ProductListing() {
                 <TableHead>NKS Code</TableHead>
                 <TableHead>Stock</TableHead>
                 <TableHead>Category</TableHead>
+                <TableHead>PDF</TableHead>
                 <TableHead className="w-[80px]"></TableHead>
               </TableRow>
             </TableHeader>
@@ -465,6 +468,20 @@ export default function ProductListing() {
                   <TableCell>{product.nksCode}</TableCell>
                   <TableCell>{product.stock.replace("_", " ")}</TableCell>
                   <TableCell>{product.category.name}</TableCell>
+                  <TableCell>
+                    {product.pdfs.length > 0 ? (
+                      <a
+                        href={product.pdfs[0].url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm font-medium text-primary hover:underline truncate block"
+                      >
+                        View PDF
+                      </a>
+                    ) : (
+                      "No PDF"
+                    )}
+                  </TableCell>
                   <TableCell>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
@@ -500,8 +517,8 @@ export default function ProductListing() {
           <DialogHeader>
             <DialogTitle>Edit Product</DialogTitle>
           </DialogHeader>
-          <form onSubmit={handleEditSubmit} className="space-y-4">
-            <div className="space-y-2">
+          <form onSubmit={handleEditSubmit} className="space-y-3  ">
+            <div className="space-y-2 ">
               <Label htmlFor="edit-name">Name</Label>
               <Input
                 id="edit-name"
@@ -568,50 +585,52 @@ export default function ProductListing() {
                 />
               </div>
             </div>
-            <div className="space-y-2">
-              <Label>Stock</Label>
-              <Select
-                value={editForm.stock}
-                onValueChange={(v) =>
-                  setEditForm((p) => ({
-                    ...p,
-                    stock: v as ProductInput["stock"],
-                  }))
-                }
-                disabled={updateProduct.isPending}
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {STOCK_OPTIONS.map((o) => (
-                    <SelectItem key={o.value} value={o.value}>
-                      {o.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="space-y-2">
-              <Label>Category</Label>
-              <Select
-                value={editForm.categoryId}
-                onValueChange={(v) =>
-                  setEditForm((p) => ({ ...p, categoryId: v }))
-                }
-                disabled={updateProduct.isPending}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select category" />
-                </SelectTrigger>
-                <SelectContent>
-                  {categories.map((c) => (
-                    <SelectItem key={c.id} value={c.id}>
-                      {c.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+            <div className="grid grid-cols-2 w-full">
+              <div className="space-y-2">
+                <Label>Stock</Label>
+                <Select
+                  value={editForm.stock}
+                  onValueChange={(v) =>
+                    setEditForm((p) => ({
+                      ...p,
+                      stock: v as ProductInput["stock"],
+                    }))
+                  }
+                  disabled={updateProduct.isPending}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {STOCK_OPTIONS.map((o) => (
+                      <SelectItem key={o.value} value={o.value}>
+                        {o.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label>Category</Label>
+                <Select
+                  value={editForm.categoryId}
+                  onValueChange={(v) =>
+                    setEditForm((p) => ({ ...p, categoryId: v }))
+                  }
+                  disabled={updateProduct.isPending}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select category" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {categories.map((c) => (
+                      <SelectItem key={c.id} value={c.id}>
+                        {c.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
             {/* PDF (optional) - Edit: show current + upload zone */}
             <div className="rounded-xl border border-dashed bg-muted/30 p-4 space-y-3">
