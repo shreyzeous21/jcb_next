@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import {
@@ -44,7 +44,11 @@ import {
 import { useProduct } from "@/hooks/use-product";
 import { useCategory } from "@/hooks/use-category";
 import type { ProductInput } from "@/actions/product";
-import { MoreHorizontal, Pencil, Trash2 } from "lucide-react";
+import { generateReactHelpers } from "@uploadthing/react";
+import type { OurFileRouter } from "@/app/api/uploadthing/core";
+import { MoreHorizontal, Pencil, Trash2, FileText, X } from "lucide-react";
+
+const { useUploadThing } = generateReactHelpers<OurFileRouter>();
 
 const STOCK_OPTIONS = [
   { value: "IN_STOCK", label: "In stock" },
@@ -59,6 +63,7 @@ const emptyForm: ProductInput = {
   nksCode: "",
   stock: "IN_STOCK",
   categoryId: "",
+  pdfUrl: null,
 };
 
 export default function ProductListing() {
@@ -71,6 +76,20 @@ export default function ProductListing() {
     deleteProduct,
   } = useProduct();
   const { categories } = useCategory();
+  const pdfUploadFor = useRef<"add" | "edit">("add");
+  const { startUpload, isUploading } = useUploadThing("pdfUploader", {
+    onClientUploadComplete: (res) => {
+      if (res?.[0]?.url) {
+        const url = res[0].url;
+        if (pdfUploadFor.current === "add")
+          setAddForm((p) => ({ ...p, pdfUrl: url }));
+        else setEditForm((p) => ({ ...p, pdfUrl: url }));
+      }
+    },
+  });
+  const triggerPdfUpload = (forForm: "add" | "edit") => {
+    pdfUploadFor.current = forForm;
+  };
 
   const [addOpen, setAddOpen] = useState(false);
   const [addForm, setAddForm] = useState<ProductInput>(emptyForm);
@@ -91,7 +110,14 @@ export default function ProductListing() {
     const nksCode = addForm.nksCode.trim();
     if (!name || !image || !partNo || !nksCode || !addForm.categoryId) return;
     createProduct.mutate(
-      { ...addForm, name, image, partNo, nksCode },
+      {
+        ...addForm,
+        name,
+        image,
+        partNo,
+        nksCode,
+        pdfUrl: addForm.pdfUrl || undefined,
+      },
       {
         onSuccess: () => {
           setAddForm(emptyForm);
@@ -127,7 +153,15 @@ export default function ProductListing() {
     updateProduct.mutate(
       {
         id: editId,
-        input: { ...editForm, name, slug, image, partNo, nksCode },
+        input: {
+          ...editForm,
+          name,
+          slug,
+          image,
+          partNo,
+          nksCode,
+          pdfUrl: editForm.pdfUrl ?? undefined,
+        },
       },
       {
         onSuccess: () => {
@@ -287,6 +321,81 @@ export default function ProductListing() {
                     ))}
                   </SelectContent>
                 </Select>
+              </div>
+              {/* PDF (optional) - Add */}
+              <div className="rounded-xl border border-dashed bg-muted/30 p-4 space-y-3">
+                <div className="flex items-center gap-2">
+                  <FileText className="h-5 w-5 text-muted-foreground" />
+                  <div>
+                    <p className="text-sm font-medium">
+                      Product PDF (optional)
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      Brochure or spec sheet. Max 4MB.
+                    </p>
+                  </div>
+                </div>
+                {addForm.pdfUrl ? (
+                  <div className="flex items-center gap-3 rounded-lg border bg-background px-3 py-2.5">
+                    <FileText className="h-8 w-8 shrink-0 text-red-500" />
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm font-medium truncate">
+                        PDF attached
+                      </p>
+                      <a
+                        href={addForm.pdfUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-xs text-primary hover:underline"
+                      >
+                        Open in new tab
+                      </a>
+                    </div>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      className="text-muted-foreground hover:text-destructive shrink-0"
+                      onClick={() =>
+                        setAddForm((p) => ({ ...p, pdfUrl: null }))
+                      }
+                      disabled={createProduct.isPending}
+                    >
+                      <X className="h-4 w-4 mr-1" />
+                      Remove
+                    </Button>
+                  </div>
+                ) : (
+                  <label className="flex flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-muted-foreground/25 bg-background/50 px-4 py-6 text-center transition-colors hover:border-primary/50 hover:bg-muted/30 cursor-pointer">
+                    <input
+                      type="file"
+                      accept="application/pdf"
+                      className="hidden"
+                      id="add-pdf"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                          triggerPdfUpload("add");
+                          startUpload([file]);
+                        }
+                        e.target.value = "";
+                      }}
+                      disabled={createProduct.isPending || isUploading}
+                    />
+                    {isUploading ? (
+                      <p className="text-sm text-muted-foreground">
+                        Uploading…
+                      </p>
+                    ) : (
+                      <>
+                        <FileText className="h-10 w-10 text-muted-foreground" />
+                        <span className="text-sm font-medium text-muted-foreground">
+                          Click to upload PDF
+                        </span>
+                      </>
+                    )}
+                  </label>
+                )}
               </div>
               <DialogFooter>
                 <Button
@@ -503,6 +612,88 @@ export default function ProductListing() {
                   ))}
                 </SelectContent>
               </Select>
+            </div>
+            {/* PDF (optional) - Edit: show current + upload zone */}
+            <div className="rounded-xl border border-dashed bg-muted/30 p-4 space-y-3">
+              <div className="flex items-center gap-2">
+                <FileText className="h-5 w-5 text-muted-foreground" />
+                <div>
+                  <p className="text-sm font-medium">Product PDF (optional)</p>
+                  <p className="text-xs text-muted-foreground">
+                    Replace or attach a PDF. Max 4MB.
+                  </p>
+                </div>
+              </div>
+              {editForm.pdfUrl ? (
+                <>
+                  <div className="rounded-lg border bg-background p-3 space-y-2">
+                    <p className="text-xs font-medium text-muted-foreground">
+                      Attached PDF
+                    </p>
+                    <div className="flex items-center gap-3">
+                      <FileText className="h-8 w-8 shrink-0 text-red-500" />
+                      <div className="min-w-0 flex-1">
+                        <a
+                          href={editForm.pdfUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-sm font-medium text-primary hover:underline truncate block"
+                        >
+                          View PDF
+                        </a>
+                        <p className="text-xs text-muted-foreground">
+                          Opens in new tab
+                        </p>
+                      </div>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        className="text-muted-foreground hover:text-destructive shrink-0"
+                        onClick={() =>
+                          setEditForm((p) => ({ ...p, pdfUrl: null }))
+                        }
+                        disabled={updateProduct.isPending}
+                      >
+                        <X className="h-4 w-4 mr-1" />
+                        Remove
+                      </Button>
+                    </div>
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Upload a new file below to replace.
+                  </p>
+                </>
+              ) : null}
+              <label className="flex flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-muted-foreground/25 bg-background/50 px-4 py-5 text-center transition-colors hover:border-primary/50 hover:bg-muted/30 cursor-pointer">
+                <input
+                  type="file"
+                  accept="application/pdf"
+                  className="hidden"
+                  id="edit-pdf"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) {
+                      triggerPdfUpload("edit");
+                      startUpload([file]);
+                    }
+                    e.target.value = "";
+                  }}
+                  disabled={updateProduct.isPending || isUploading}
+                />
+                {isUploading ? (
+                  <p className="text-sm text-muted-foreground">Uploading…</p>
+                ) : (
+                  <>
+                    <FileText className="h-8 w-8 text-muted-foreground" />
+                    <span className="text-sm font-medium text-muted-foreground">
+                      {editForm.pdfUrl
+                        ? "Click to replace PDF"
+                        : "Click to attach PDF"}
+                    </span>
+                  </>
+                )}
+              </label>
             </div>
             <DialogFooter>
               <Button

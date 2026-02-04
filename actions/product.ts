@@ -10,6 +10,8 @@ export type ProductInput = {
     nksCode: string;
     stock: "IN_STOCK" | "OUT_OF_STOCK";
     categoryId: string;
+    /** Optional PDF URL (from UploadThing). Pass "" or omit to have no PDF. */
+    pdfUrl?: string | null;
 };
 
 /** Generate URL-friendly slug from name (e.g. "My Product" → "my-product") */
@@ -47,6 +49,7 @@ export async function getProducts() {
                 category: {
                     select: { id: true, name: true },
                 },
+                pdfs: { take: 1, orderBy: { createdAt: "desc" } },
             },
             orderBy: { createdAt: "desc" },
         });
@@ -71,9 +74,10 @@ async function validateProductInput(data: ProductInput) {
     if (data.stock !== "IN_STOCK" && data.stock !== "OUT_OF_STOCK") {
         return { ok: false, error: "Invalid stock status" };
     }
+    const pdfUrl = data.pdfUrl === undefined ? undefined : (data.pdfUrl?.trim() || null);
     return {
         ok: true as const,
-        data: { name, slug, image, partNo, nksCode, stock: data.stock, categoryId: data.categoryId },
+        data: { name, slug, image, partNo, nksCode, stock: data.stock, categoryId: data.categoryId, pdfUrl },
     };
 }
 
@@ -92,13 +96,21 @@ export async function createProduct(input: ProductInput) {
         }
 
         const uniqueSlug = await ensureUniqueSlug(data.slug);
+        const { pdfUrl, ...productData } = data;
 
         const product = await prisma.product.create({
-            data: { ...data, slug: uniqueSlug },
+            data: { ...productData, slug: uniqueSlug },
             include: {
                 category: { select: { id: true, name: true } },
+                pdfs: true,
             },
         });
+
+        if (pdfUrl) {
+            await prisma.productPdf.create({
+                data: { productId: product.id, url: pdfUrl },
+            });
+        }
         return { success: true, product };
     } catch (error) {
         console.error("createProduct error:", error);
@@ -121,12 +133,21 @@ export async function updateProduct(id: string, input: ProductInput) {
         }
 
         const uniqueSlug = await ensureUniqueSlug(data.slug, id);
+        const { pdfUrl, ...productData } = data;
+
+        await prisma.productPdf.deleteMany({ where: { productId: id } });
+        if (pdfUrl) {
+            await prisma.productPdf.create({
+                data: { productId: id, url: pdfUrl },
+            });
+        }
 
         const product = await prisma.product.update({
             where: { id },
-            data: { ...data, slug: uniqueSlug },
+            data: { ...productData, slug: uniqueSlug },
             include: {
                 category: { select: { id: true, name: true } },
+                pdfs: true,
             },
         });
         return { success: true, product };

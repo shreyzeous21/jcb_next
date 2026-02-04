@@ -1,13 +1,7 @@
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, FileText } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "../ui/card";
+import { Card, CardContent } from "../ui/card";
 import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
 import { cn } from "@/lib/utils";
@@ -23,6 +17,7 @@ type SingleProductProps = {
     partNo: string;
     nksCode: string;
     category: { name: string };
+    pdfs?: { id: string; url: string }[];
   };
 };
 
@@ -88,6 +83,21 @@ export default function SingleProduct({ product }: SingleProductProps) {
               />
             </div>
           </div>
+
+          {/* PDF DOWNLOAD (optional) */}
+          {product.pdfs?.[0]?.url && (
+            <div className="rounded-xl border bg-muted/30 p-4">
+              <a
+                href={product.pdfs[0].url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline"
+              >
+                <FileText className="h-4 w-4" />
+                Download product PDF
+              </a>
+            </div>
+          )}
 
           <ContactEnquiry product={product} />
         </CardContent>

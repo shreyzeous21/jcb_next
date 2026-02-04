@@ -13,6 +13,7 @@ export default async function ProductPage({
     where: { slug },
     include: {
       category: { select: { id: true, name: true } },
+      pdfs: { take: 1, orderBy: { createdAt: "desc" } },
     },
   });
   if (!product) notFound();

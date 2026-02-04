@@ -111,6 +111,19 @@ model Category {
   @@map("category")
 }
 
+model ProductPdf {
+  id  String @id @default(cuid())
+  url String
+
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@index([productId])
+  @@map("product_pdf")
+}
+
 model Product {
   id      String      @id @default(cuid())
   name    String
@@ -120,9 +133,12 @@ model Product {
   partNo  String
   nksCode String
 
+  pdfs ProductPdf[]
+
   categoryId String
-  category   Category  @relation(fields: [categoryId], references: [id])
-  enquiries  Enquiry[]
+  category   Category @relation(fields: [categoryId], references: [id])
+
+  enquiries Enquiry[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
