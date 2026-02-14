@@ -58,7 +58,7 @@ export default function Benefits() {
                     {benefit.title}
                   </CardTitle>
 
-                  <CardDescription className="text-sm">
+                  <CardDescription className="text-sm whitespace-pre-line">
                     {benefit.description}
                   </CardDescription>
                 </CardHeader>

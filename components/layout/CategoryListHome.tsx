@@ -12,7 +12,7 @@ export default function CategoryListHome() {
 
   if (isLoading) {
     return (
-      <Card>
+      <Card className="p-0">
         <CardHeader className="pb-4">
           <div className="flex items-center gap-3">
             <Skeleton className="h-9 w-9 rounded-lg" />
@@ -22,7 +22,7 @@ export default function CategoryListHome() {
             </div>
           </div>
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-0">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {[1, 2, 3, 4, 5, 6].map((i) => (
               <Skeleton key={i} className="h-16 rounded-xl" />
@@ -36,7 +36,7 @@ export default function CategoryListHome() {
   if (error || !categories?.length) return null;
 
   return (
-    <Card className="border-none bg-transparent shadow-none">
+    <Card className="border-none bg-transparent shadow-none p-0">
       <CardHeader className="pb-4">
         <div className="flex items-center gap-3">
           <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary">

@@ -22,8 +22,8 @@ export const navLinks = [
         href: "/quality",
     },
     {
-        name: "Shop",
-        href: "/shop",
+        name: "Products",
+        href: "/products",
     },
     {
         name: "Contact Us",
@@ -46,24 +46,30 @@ export const homeBanner = [
 export const benefits = [
     {
         title: "ESTABLISHED BRAND RECOGNITION",
-        description: "Helps to attract customers and build trust in your business.",
+        description: "Niks is a recognized and trusted name in the JCB parts industry, known for consistent quality and dependable supply.Our brand reputation helps both dealers and exporters build credibility instantly—whether selling across the counter or across borders.",
         Icon: FaAward,
     },
     {
         title: "SUPPORT AND TRAINING",
-        description: "Help them run their business more efficiently and effectively.",
+        description: "Dealers receive structured training and ongoing support to operate confidently and efficiently.From product knowledge to sales guidance, our team helps you perform at your best.",
         Icon: FaHandsHelping,
     },
     {
         title: "MARKETING AND ADVERTISING",
-        description: "Attract customers, which can help you attract new business and grow your customer base.",
+        description: "Niks invests in brand promotion and dealer support to help drive local demand. You benefit from professional marketing materials and brand-led campaigns designed to bring customers to you.",
         Icon: FaBullhorn,
     },
     {
-        title: "EXCLUSIVE TERRITORIES",
-        description: "Franchise agreements often come with exclusive territories, which can help ensure that you are not competing with other franchisees for the same customers",
-        Icon: FaMapMarkedAlt,
+        title: "BRAND PROMOTION & DEALER SUPPORT",
+        description: `Niks invests in brand promotion and dealer support to help drive local demand. You benefit from professional marketing materials and brand-led campaigns designed to bring customers to you.
+    
+    Advantages:
+    • Competitive export pricing
+    • High-volume supply capability
+    • Stable sourcing`,
+        Icon: FaBullhorn, // you can change icon if needed
     },
+
     {
         title: "GROUP PURCHASING POWER",
         description: "As part of a franchise, you can often take advantage of group purchasing power to negotiate better deals on supplies and equipment, which can help reduce your operating costs.",

@@ -23,7 +23,7 @@ export default function ProductCard({
 
   return (
     <Link
-      href={`/shop/${product.slug}`}
+      href={`/products/${product.slug}`}
       className="group relative overflow-hidden rounded-2xl border bg-card p-3
                  shadow-sm transition-all duration-300
                  hover:-translate-y-1 hover:shadow-xl hover:border-primary/50

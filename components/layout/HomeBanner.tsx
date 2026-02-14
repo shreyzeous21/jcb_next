@@ -23,7 +23,7 @@ export default function HomeBanner() {
     >
       {homeBanner.map((banner, index) => (
         <SwiperSlide key={banner.image}>
-          <div className="relative w-full h-[400px] lg:h-[600px] overflow-hidden rounded-xl bg-muted">
+          <div className="relative lg:block hidden w-full h-[600px] overflow-hidden rounded-xl bg-muted">
             <Image
               src={banner.image}
               alt="JCV Parts Banner"
