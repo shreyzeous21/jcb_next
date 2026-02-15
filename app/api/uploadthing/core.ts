@@ -5,23 +5,31 @@ import { UploadThingError } from "uploadthing/server";
 const f = createUploadthing();
 
 export const ourFileRouter = {
-  /** PDF upload for product attachment (dashboard only, optional per product) */
-  pdfUploader: f({
-    "application/pdf": {
-      maxFileSize: "4MB",
-      maxFileCount: 1,
-    },
+  mediaUploader: f({
+    image: { maxFileSize: "8MB", maxFileCount: 10 },
+    video: { maxFileSize: "256MB", maxFileCount: 2 },
+    audio: { maxFileSize: "32MB", maxFileCount: 5 },
+    pdf: { maxFileSize: "16MB", maxFileCount: 5 },
+    text: { maxFileSize: "8MB", maxFileCount: 5 },
+    blob: { maxFileSize: "512MB", maxFileCount: 5 },
+  }).middleware(async () => {
+    const session = await authSession();
+    if (!session?.user?.id) {
+      throw new UploadThingError("Unauthorized");
+    }
+
+    return { userId: session.user.id };
   })
-    .middleware(async () => {
-      const session = await authSession();
-      if (!session?.user?.id) throw new UploadThingError("Unauthorized");
-      return { userId: session.user.id };
-    })
-    .onUploadComplete(async ({ file }) => {
-      return { url: file.url, key: file.key };
+    .onUploadComplete(async ({ file, metadata }) => {
+      return {
+        url: file.url,
+        key: file.key,
+        name: file.name,
+        size: file.size,
+        type: file.type,
+        userId: metadata.userId,
+      };
     }),
 } satisfies FileRouter;
 
-// This gives you a TypeScript type that describes all endpoints.
-// You’ll use this type in React to make sure endpoint="imageUploader" is valid and type-safe.
 export type OurFileRouter = typeof ourFileRouter;

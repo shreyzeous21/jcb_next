@@ -97,6 +97,10 @@ export const DASHBOARD_MENU_ITEMS = [
         href: "/dashboard/categories",
     },
     {
+        name: "Media Manager",
+        href: "/dashboard/media-manager",
+    },
+    {
         name: "Products",
         href: "/dashboard/products",
     },
@@ -113,3 +117,5 @@ export const DASHBOARD_MENU_ITEMS = [
         href: "/dashboard/enquiries",
     },
 ]
+
+export const TOTAL_LIMIT_BYTES = 2 * 1024 * 1024 * 1024;

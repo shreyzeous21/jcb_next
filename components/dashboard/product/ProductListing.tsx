@@ -44,9 +44,11 @@ import {
 import { useProduct } from "@/hooks/use-product";
 import { useCategory } from "@/hooks/use-category";
 import type { ProductInput } from "@/actions/product";
+import { MediaPicker } from "@/components/dashboard/product/MediaPicker";
 import { generateReactHelpers } from "@uploadthing/react";
 import type { OurFileRouter } from "@/app/api/uploadthing/core";
-import { MoreHorizontal, Pencil, Trash2, FileText, X } from "lucide-react";
+import { uploadMedia } from "@/actions/uploadthing-action";
+import { MoreHorizontal, Pencil, Trash2, FileText, X, ImageIcon } from "lucide-react";
 
 const { useUploadThing } = generateReactHelpers<OurFileRouter>();
 
@@ -77,19 +79,35 @@ export default function ProductListing() {
   } = useProduct();
   const { categories } = useCategory();
   const pdfUploadFor = useRef<"add" | "edit">("add");
-  const { startUpload, isUploading } = useUploadThing("pdfUploader", {
-    onClientUploadComplete: (res) => {
-      if (res?.[0]?.url) {
-        const url = res[0].url;
+  const { startUpload, isUploading } = useUploadThing("mediaUploader", {
+    onClientUploadComplete: async (res) => {
+      const file = res?.[0];
+      if (!file?.url) return;
+      try {
+        await uploadMedia({
+          file: {
+            name: file.name,
+            url: file.url,
+            key: file.key,
+            type: file.type,
+            size: file.size,
+          },
+          category: "pdf",
+        });
         if (pdfUploadFor.current === "add")
-          setAddForm((p) => ({ ...p, pdfUrl: url }));
-        else setEditForm((p) => ({ ...p, pdfUrl: url }));
+          setAddForm((p) => ({ ...p, pdfUrl: file.url }));
+        else setEditForm((p) => ({ ...p, pdfUrl: file.url }));
+      } catch (e) {
+        console.error(e);
       }
     },
   });
   const triggerPdfUpload = (forForm: "add" | "edit") => {
     pdfUploadFor.current = forForm;
   };
+
+  const [imagePickerFor, setImagePickerFor] = useState<"add" | "edit" | null>(null);
+  const [pdfPickerFor, setPdfPickerFor] = useState<"add" | "edit" | null>(null);
 
   const [addOpen, setAddOpen] = useState(false);
   const [addForm, setAddForm] = useState<ProductInput>(emptyForm);
@@ -137,6 +155,7 @@ export default function ProductListing() {
       nksCode: product.nksCode,
       stock: product.stock,
       categoryId: product.categoryId,
+      pdfUrl: product.pdfs[0]?.url ?? null,
     });
     setEditOpen(true);
   };
@@ -236,18 +255,65 @@ export default function ProductListing() {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="add-image">Image URL</Label>
-                <Input
-                  id="add-image"
-                  type="url"
-                  value={addForm.image}
-                  onChange={(e) =>
-                    setAddForm((p) => ({ ...p, image: e.target.value }))
-                  }
-                  placeholder="https://..."
-                  required
-                  disabled={createProduct.isPending}
-                />
+                <Label>Product image</Label>
+                <div className="flex flex-col gap-2">
+                  {addForm.image ? (
+                    <div className="flex items-center gap-3 rounded-lg border bg-muted/30 p-3">
+                      <div className="relative h-14 w-14 shrink-0 rounded overflow-hidden bg-muted">
+                        <Image
+                          src={addForm.image}
+                          alt="Preview"
+                          fill
+                          className="object-cover"
+                          sizes="56px"
+                          unoptimized
+                        />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <p className="text-xs text-muted-foreground">Selected from media</p>
+                        <Button
+                          type="button"
+                          variant="link"
+                          className="h-auto p-0 text-xs"
+                          onClick={() => setImagePickerFor("add")}
+                          disabled={createProduct.isPending}
+                        >
+                          Change image
+                        </Button>
+                      </div>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setAddForm((p) => ({ ...p, image: "" }))}
+                        disabled={createProduct.isPending}
+                      >
+                        <X className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  ) : (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="w-full"
+                      onClick={() => setImagePickerFor("add")}
+                      disabled={createProduct.isPending}
+                    >
+                      <ImageIcon className="mr-2 h-4 w-4" />
+                      Choose image from media
+                    </Button>
+                  )}
+                  <Input
+                    id="add-image"
+                    type="url"
+                    value={addForm.image}
+                    onChange={(e) =>
+                      setAddForm((p) => ({ ...p, image: e.target.value }))
+                    }
+                    placeholder="Or paste image URL"
+                    disabled={createProduct.isPending}
+                  />
+                </div>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
@@ -324,16 +390,14 @@ export default function ProductListing() {
                   </Select>
                 </div>
               </div>
-              {/* PDF (optional) - Add */}
+              {/* PDF (optional) - Add: media picker + upload */}
               <div className="rounded-xl border border-dashed bg-muted/30 p-4 space-y-3">
                 <div className="flex items-center gap-2">
                   <FileText className="h-5 w-5 text-muted-foreground" />
                   <div>
-                    <p className="text-sm font-medium">
-                      Product PDF (optional)
-                    </p>
+                    <p className="text-sm font-medium">Product PDF (optional)</p>
                     <p className="text-xs text-muted-foreground">
-                      Brochure or spec sheet. Max 4MB.
+                      Choose from media or upload. Max 16MB.
                     </p>
                   </div>
                 </div>
@@ -341,9 +405,7 @@ export default function ProductListing() {
                   <div className="flex items-center gap-3 rounded-lg border bg-background px-3 py-2.5">
                     <FileText className="h-8 w-8 shrink-0 text-red-500" />
                     <div className="min-w-0 flex-1">
-                      <p className="text-sm font-medium truncate">
-                        PDF attached
-                      </p>
+                      <p className="text-sm font-medium truncate">PDF attached</p>
                       <a
                         href={addForm.pdfUrl}
                         target="_blank"
@@ -367,8 +429,18 @@ export default function ProductListing() {
                       Remove
                     </Button>
                   </div>
-                ) : (
-                  <label className="flex flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-muted-foreground/25 bg-background/50 px-4 py-6 text-center transition-colors hover:border-primary/50 hover:bg-muted/30 cursor-pointer">
+                ) : null}
+                <div className="flex flex-col sm:flex-row gap-2">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setPdfPickerFor("add")}
+                    disabled={createProduct.isPending}
+                  >
+                    Choose PDF from media
+                  </Button>
+                  <label className="inline-flex items-center justify-center gap-2 rounded-md border border-input bg-background px-4 py-2 text-sm cursor-pointer hover:bg-muted/50">
                     <input
                       type="file"
                       accept="application/pdf"
@@ -384,20 +456,9 @@ export default function ProductListing() {
                       }}
                       disabled={createProduct.isPending || isUploading}
                     />
-                    {isUploading ? (
-                      <p className="text-sm text-muted-foreground">
-                        Uploading…
-                      </p>
-                    ) : (
-                      <>
-                        <FileText className="h-10 w-10 text-muted-foreground" />
-                        <span className="text-sm font-medium text-muted-foreground">
-                          Click to upload PDF
-                        </span>
-                      </>
-                    )}
+                    {isUploading ? "Uploading…" : "Upload new PDF"}
                   </label>
-                )}
+                </div>
               </div>
               <DialogFooter>
                 <Button
@@ -544,18 +605,65 @@ export default function ProductListing() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="edit-image">Image URL</Label>
-              <Input
-                id="edit-image"
-                type="url"
-                value={editForm.image}
-                onChange={(e) =>
-                  setEditForm((p) => ({ ...p, image: e.target.value }))
-                }
-                placeholder="https://..."
-                required
-                disabled={updateProduct.isPending}
-              />
+              <Label>Product image</Label>
+              <div className="flex flex-col gap-2">
+                {editForm.image ? (
+                  <div className="flex items-center gap-3 rounded-lg border bg-muted/30 p-3">
+                    <div className="relative h-14 w-14 shrink-0 rounded overflow-hidden bg-muted">
+                      <Image
+                        src={editForm.image}
+                        alt="Preview"
+                        fill
+                        className="object-cover"
+                        sizes="56px"
+                        unoptimized
+                      />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-xs text-muted-foreground">Selected from media</p>
+                      <Button
+                        type="button"
+                        variant="link"
+                        className="h-auto p-0 text-xs"
+                        onClick={() => setImagePickerFor("edit")}
+                        disabled={updateProduct.isPending}
+                      >
+                        Change image
+                      </Button>
+                    </div>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setEditForm((p) => ({ ...p, image: "" }))}
+                      disabled={updateProduct.isPending}
+                    >
+                      <X className="h-4 w-4" />
+                    </Button>
+                  </div>
+                ) : (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="w-full"
+                    onClick={() => setImagePickerFor("edit")}
+                    disabled={updateProduct.isPending}
+                  >
+                    <ImageIcon className="mr-2 h-4 w-4" />
+                    Choose image from media
+                  </Button>
+                )}
+                <Input
+                  id="edit-image"
+                  type="url"
+                  value={editForm.image}
+                  onChange={(e) =>
+                    setEditForm((p) => ({ ...p, image: e.target.value }))
+                  }
+                  placeholder="Or paste image URL"
+                  disabled={updateProduct.isPending}
+                />
+              </div>
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
@@ -632,87 +740,75 @@ export default function ProductListing() {
                 </Select>
               </div>
             </div>
-            {/* PDF (optional) - Edit: show current + upload zone */}
+            {/* PDF (optional) - Edit: current + choose from media + upload */}
             <div className="rounded-xl border border-dashed bg-muted/30 p-4 space-y-3">
               <div className="flex items-center gap-2">
                 <FileText className="h-5 w-5 text-muted-foreground" />
                 <div>
                   <p className="text-sm font-medium">Product PDF (optional)</p>
                   <p className="text-xs text-muted-foreground">
-                    Replace or attach a PDF. Max 4MB.
+                    Choose from media or upload. Max 16MB.
                   </p>
                 </div>
               </div>
               {editForm.pdfUrl ? (
-                <>
-                  <div className="rounded-lg border bg-background p-3 space-y-2">
-                    <p className="text-xs font-medium text-muted-foreground">
-                      Attached PDF
-                    </p>
-                    <div className="flex items-center gap-3">
-                      <FileText className="h-8 w-8 shrink-0 text-red-500" />
-                      <div className="min-w-0 flex-1">
-                        <a
-                          href={editForm.pdfUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-sm font-medium text-primary hover:underline truncate block"
-                        >
-                          View PDF
-                        </a>
-                        <p className="text-xs text-muted-foreground">
-                          Opens in new tab
-                        </p>
-                      </div>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        className="text-muted-foreground hover:text-destructive shrink-0"
-                        onClick={() =>
-                          setEditForm((p) => ({ ...p, pdfUrl: null }))
-                        }
-                        disabled={updateProduct.isPending}
-                      >
-                        <X className="h-4 w-4 mr-1" />
-                        Remove
-                      </Button>
-                    </div>
+                <div className="flex items-center gap-3 rounded-lg border bg-background px-3 py-2.5">
+                  <FileText className="h-8 w-8 shrink-0 text-red-500" />
+                  <div className="min-w-0 flex-1">
+                    <a
+                      href={editForm.pdfUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm font-medium text-primary hover:underline truncate block"
+                    >
+                      View PDF
+                    </a>
+                    <p className="text-xs text-muted-foreground">Opens in new tab</p>
                   </div>
-                  <p className="text-xs text-muted-foreground">
-                    Upload a new file below to replace.
-                  </p>
-                </>
-              ) : null}
-              <label className="flex flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-muted-foreground/25 bg-background/50 px-4 py-5 text-center transition-colors hover:border-primary/50 hover:bg-muted/30 cursor-pointer">
-                <input
-                  type="file"
-                  accept="application/pdf"
-                  className="hidden"
-                  id="edit-pdf"
-                  onChange={(e) => {
-                    const file = e.target.files?.[0];
-                    if (file) {
-                      triggerPdfUpload("edit");
-                      startUpload([file]);
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="text-muted-foreground hover:text-destructive shrink-0"
+                    onClick={() =>
+                      setEditForm((p) => ({ ...p, pdfUrl: null }))
                     }
-                    e.target.value = "";
-                  }}
-                  disabled={updateProduct.isPending || isUploading}
-                />
-                {isUploading ? (
-                  <p className="text-sm text-muted-foreground">Uploading…</p>
-                ) : (
-                  <>
-                    <FileText className="h-8 w-8 text-muted-foreground" />
-                    <span className="text-sm font-medium text-muted-foreground">
-                      {editForm.pdfUrl
-                        ? "Click to replace PDF"
-                        : "Click to attach PDF"}
-                    </span>
-                  </>
-                )}
-              </label>
+                    disabled={updateProduct.isPending}
+                  >
+                    <X className="h-4 w-4 mr-1" />
+                    Remove
+                  </Button>
+                </div>
+              ) : null}
+              <div className="flex flex-col sm:flex-row gap-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setPdfPickerFor("edit")}
+                  disabled={updateProduct.isPending}
+                >
+                  {editForm.pdfUrl ? "Replace with media" : "Choose PDF from media"}
+                </Button>
+                <label className="inline-flex items-center justify-center gap-2 rounded-md border border-input bg-background px-4 py-2 text-sm cursor-pointer hover:bg-muted/50">
+                  <input
+                    type="file"
+                    accept="application/pdf"
+                    className="hidden"
+                    id="edit-pdf"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) {
+                        triggerPdfUpload("edit");
+                        startUpload([file]);
+                      }
+                      e.target.value = "";
+                    }}
+                    disabled={updateProduct.isPending || isUploading}
+                  />
+                  {isUploading ? "Uploading…" : "Upload new PDF"}
+                </label>
+              </div>
             </div>
             <DialogFooter>
               <Button
@@ -759,6 +855,34 @@ export default function ProductListing() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Image picker from media manager */}
+      <MediaPicker
+        kind="image"
+        open={imagePickerFor !== null}
+        onOpenChange={(open) => !open && setImagePickerFor(null)}
+        value={imagePickerFor === "add" ? addForm.image : editForm.image}
+        onSelect={(url) => {
+          if (imagePickerFor === "add") setAddForm((p) => ({ ...p, image: url }));
+          else setEditForm((p) => ({ ...p, image: url }));
+          setImagePickerFor(null);
+        }}
+        disabled={createProduct.isPending || updateProduct.isPending}
+      />
+
+      {/* PDF picker from media manager */}
+      <MediaPicker
+        kind="pdf"
+        open={pdfPickerFor !== null}
+        onOpenChange={(open) => !open && setPdfPickerFor(null)}
+        value={pdfPickerFor === "add" ? addForm.pdfUrl ?? null : editForm.pdfUrl ?? null}
+        onSelect={(url) => {
+          if (pdfPickerFor === "add") setAddForm((p) => ({ ...p, pdfUrl: url }));
+          else setEditForm((p) => ({ ...p, pdfUrl: url }));
+          setPdfPickerFor(null);
+        }}
+        disabled={createProduct.isPending || updateProduct.isPending}
+      />
     </Card>
   );
 }

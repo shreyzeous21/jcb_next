@@ -161,3 +161,30 @@ model Enquiry {
   @@index([userId])
   @@map("enquiry")
 }
+
+enum MediaCategory {
+  image
+  video
+  audio
+  pdf
+  text
+  other
+}
+
+model MediaManager {
+  id String @id @default(cuid())
+
+  name String // original file name
+  url  String // UploadThing / CDN URL
+  key  String // UploadThing file key
+  type String // MIME type (image/png, video/mp4, etc.)
+  size Int // file size in bytes
+
+  category MediaCategory // image | video | audio | pdf | text | other
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([category])
+  @@index([createdAt])
+}
