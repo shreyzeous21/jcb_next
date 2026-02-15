@@ -2,6 +2,7 @@ import About from "@/components/layout/About";
 import Benefits from "@/components/layout/Benefits";
 import CategoryListHome from "@/components/layout/CategoryListHome";
 import HomeBanner from "@/components/layout/HomeBanner";
+import StatsSection from "@/components/layout/StatsSection";
 import React from "react";
 
 export default function Home() {
@@ -11,6 +12,7 @@ export default function Home() {
       <About />
       <CategoryListHome />
       <Benefits />
+      <StatsSection />
     </div>
   );
 }
