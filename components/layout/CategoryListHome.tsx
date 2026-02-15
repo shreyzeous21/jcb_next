@@ -37,13 +37,10 @@ export default function CategoryListHome() {
 
   return (
     <Card className="border-none bg-transparent shadow-none p-0">
-      <CardHeader className="pb-4">
+      <CardHeader className="pb-4 p-0">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
-            <Layers className="h-5 w-5" />
-          </div>
           <div>
-            <CardTitle className="text-xl sm:text-2xl font-semibold tracking-tight">
+            <CardTitle className="text-xl sm:text-2xl font-semibold tracking-tight p-0">
               Shop by Category
             </CardTitle>
             <p className="text-sm text-muted-foreground">
