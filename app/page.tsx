@@ -10,9 +10,9 @@ export default function Home() {
     <div className=" mx-auto min-h-screen flex-col flex gap-10 py-6 px-4">
       <HomeBanner />
       <About />
-      <CategoryListHome />
+      {/* <CategoryListHome /> */}
       <Benefits />
-      <StatsSection />
+      {/* <StatsSection /> */}
     </div>
   );
 }
