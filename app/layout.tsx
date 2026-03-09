@@ -50,7 +50,7 @@ export const metadata: Metadata = {
   },
 
   icons: {
-    icon: "/jcblogo.jpg",
+    icon: "/logo1.jpeg",
     apple: "/jcblogo.png",
   },
 
@@ -64,7 +64,7 @@ export const metadata: Metadata = {
       "Buy genuine car spare parts and accessories from Niks Parts. Trusted by customers across India.",
     images: [
       {
-        url: "/jcblogo.jpg",
+        url: "/logo1.jpeg",
         width: 1200,
         height: 630,
         alt: "Niks Parts - Car Spare Parts Platform",
@@ -77,7 +77,7 @@ export const metadata: Metadata = {
     title: "Niks Parts | Quality Car Spare Parts",
     description:
       "Your trusted destination for car spare parts and accessories.",
-    images: ["/jcblogo.jpg"],
+    images: ["/logo1.jpeg"],
     creator: "@niksparts", // optional
   },
 
