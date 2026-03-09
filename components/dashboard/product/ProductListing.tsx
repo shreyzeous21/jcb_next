@@ -48,7 +48,14 @@ import { MediaPicker } from "@/components/dashboard/product/MediaPicker";
 import { generateReactHelpers } from "@uploadthing/react";
 import type { OurFileRouter } from "@/app/api/uploadthing/core";
 import { uploadMedia } from "@/actions/uploadthing-action";
-import { MoreHorizontal, Pencil, Trash2, FileText, X, ImageIcon } from "lucide-react";
+import {
+  MoreHorizontal,
+  Pencil,
+  Trash2,
+  FileText,
+  X,
+  ImageIcon,
+} from "lucide-react";
 
 const { useUploadThing } = generateReactHelpers<OurFileRouter>();
 
@@ -106,7 +113,9 @@ export default function ProductListing() {
     pdfUploadFor.current = forForm;
   };
 
-  const [imagePickerFor, setImagePickerFor] = useState<"add" | "edit" | null>(null);
+  const [imagePickerFor, setImagePickerFor] = useState<"add" | "edit" | null>(
+    null,
+  );
   const [pdfPickerFor, setPdfPickerFor] = useState<"add" | "edit" | null>(null);
 
   const [addOpen, setAddOpen] = useState(false);
@@ -120,13 +129,26 @@ export default function ProductListing() {
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [deleteName, setDeleteName] = useState("");
 
+  const [addFormError, setAddFormError] = useState<string | null>(null);
+  const [editFormError, setEditFormError] = useState<string | null>(null);
+
   const handleAddSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    setAddFormError(null);
     const name = addForm.name.trim();
     const image = addForm.image.trim();
     const partNo = addForm.partNo.trim();
     const nksCode = addForm.nksCode.trim();
-    if (!name || !image || !partNo || !nksCode || !addForm.categoryId) return;
+    const missing: string[] = [];
+    if (!name) missing.push("Name");
+    if (!image) missing.push("Product image");
+    if (!partNo) missing.push("Part No");
+    if (!nksCode) missing.push("NKS Code");
+    if (!addForm.categoryId) missing.push("Category");
+    if (missing.length > 0) {
+      setAddFormError(`Please fill in: ${missing.join(", ")}`);
+      return;
+    }
     createProduct.mutate(
       {
         ...addForm,
@@ -139,6 +161,7 @@ export default function ProductListing() {
       {
         onSuccess: () => {
           setAddForm(emptyForm);
+          setAddFormError(null);
           setAddOpen(false);
         },
       },
@@ -162,13 +185,23 @@ export default function ProductListing() {
 
   const handleEditSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    setEditFormError(null);
     if (!editId) return;
     const name = editForm.name.trim();
     const slug = editForm.slug?.trim();
     const image = editForm.image.trim();
     const partNo = editForm.partNo.trim();
     const nksCode = editForm.nksCode.trim();
-    if (!name || !image || !partNo || !nksCode || !editForm.categoryId) return;
+    const missing: string[] = [];
+    if (!name) missing.push("Name");
+    if (!image) missing.push("Product image");
+    if (!partNo) missing.push("Part No");
+    if (!nksCode) missing.push("NKS Code");
+    if (!editForm.categoryId) missing.push("Category");
+    if (missing.length > 0) {
+      setEditFormError(`Please fill in: ${missing.join(", ")}`);
+      return;
+    }
     updateProduct.mutate(
       {
         id: editId,
@@ -186,6 +219,7 @@ export default function ProductListing() {
         onSuccess: () => {
           setEditId(null);
           setEditForm(emptyForm);
+          setEditFormError(null);
           setEditOpen(false);
         },
       },
@@ -216,7 +250,13 @@ export default function ProductListing() {
           <CardTitle>Products</CardTitle>
           <CardDescription>Manage your products here</CardDescription>
         </div>
-        <Dialog open={addOpen} onOpenChange={setAddOpen}>
+        <Dialog
+          open={addOpen}
+          onOpenChange={(open) => {
+            setAddOpen(open);
+            if (!open) setAddFormError(null);
+          }}
+        >
           <DialogTrigger asChild>
             <Button variant="outline" className="w-full lg:w-auto">
               Add Product
@@ -226,34 +266,48 @@ export default function ProductListing() {
             <DialogHeader>
               <DialogTitle>Add Product</DialogTitle>
             </DialogHeader>
-            <form onSubmit={handleAddSubmit} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="add-name">Name</Label>
-                <Input
-                  id="add-name"
-                  value={addForm.name}
-                  onChange={(e) =>
-                    setAddForm((p) => ({ ...p, name: e.target.value }))
-                  }
-                  placeholder="Product name"
-                  required
-                  disabled={createProduct.isPending}
-                />
+            {(addFormError || createProduct.isError) && (
+              <p className="text-sm text-destructive font-medium rounded-md bg-destructive/10 px-3 py-2">
+                {addFormError ??
+                  (createProduct.error instanceof Error
+                    ? createProduct.error.message
+                    : String(createProduct.error ?? "Something went wrong"))}
+              </p>
+            )}
+            <form
+              onSubmit={handleAddSubmit}
+              className="space-y-4 h-[400px] overflow-y-auto"
+            >
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="add-name">Name</Label>
+                  <Input
+                    id="add-name"
+                    value={addForm.name}
+                    onChange={(e) =>
+                      setAddForm((p) => ({ ...p, name: e.target.value }))
+                    }
+                    placeholder="Product name"
+                    required
+                    disabled={createProduct.isPending}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="add-slug">
+                    Slug (optional, auto from name)
+                  </Label>
+                  <Input
+                    id="add-slug"
+                    value={addForm.slug ?? ""}
+                    onChange={(e) =>
+                      setAddForm((p) => ({ ...p, slug: e.target.value }))
+                    }
+                    placeholder="Leave empty to auto-generate from name"
+                    disabled={createProduct.isPending}
+                  />
+                </div>
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="add-slug">
-                  Slug (optional, auto from name)
-                </Label>
-                <Input
-                  id="add-slug"
-                  value={addForm.slug ?? ""}
-                  onChange={(e) =>
-                    setAddForm((p) => ({ ...p, slug: e.target.value }))
-                  }
-                  placeholder="Leave empty to auto-generate from name"
-                  disabled={createProduct.isPending}
-                />
-              </div>
+
               <div className="space-y-2">
                 <Label>Product image</Label>
                 <div className="flex flex-col gap-2">
@@ -270,7 +324,9 @@ export default function ProductListing() {
                         />
                       </div>
                       <div className="min-w-0 flex-1">
-                        <p className="text-xs text-muted-foreground">Selected from media</p>
+                        <p className="text-xs text-muted-foreground">
+                          Selected from media
+                        </p>
                         <Button
                           type="button"
                           variant="link"
@@ -395,7 +451,9 @@ export default function ProductListing() {
                 <div className="flex items-center gap-2">
                   <FileText className="h-5 w-5 text-muted-foreground" />
                   <div>
-                    <p className="text-sm font-medium">Product PDF (optional)</p>
+                    <p className="text-sm font-medium">
+                      Product PDF (optional)
+                    </p>
                     <p className="text-xs text-muted-foreground">
                       Choose from media or upload. Max 16MB.
                     </p>
@@ -405,7 +463,9 @@ export default function ProductListing() {
                   <div className="flex items-center gap-3 rounded-lg border bg-background px-3 py-2.5">
                     <FileText className="h-8 w-8 shrink-0 text-red-500" />
                     <div className="min-w-0 flex-1">
-                      <p className="text-sm font-medium truncate">PDF attached</p>
+                      <p className="text-sm font-medium truncate">
+                        PDF attached
+                      </p>
                       <a
                         href={addForm.pdfUrl}
                         target="_blank"
@@ -573,11 +633,25 @@ export default function ProductListing() {
       </CardContent>
 
       {/* Edit dialog */}
-      <Dialog open={editOpen} onOpenChange={setEditOpen}>
+      <Dialog
+        open={editOpen}
+        onOpenChange={(open) => {
+          setEditOpen(open);
+          if (!open) setEditFormError(null);
+        }}
+      >
         <DialogContent className="max-w-md">
           <DialogHeader>
             <DialogTitle>Edit Product</DialogTitle>
           </DialogHeader>
+          {(editFormError || updateProduct.isError) && (
+            <p className="text-sm text-destructive font-medium rounded-md bg-destructive/10 px-3 py-2">
+              {editFormError ??
+                (updateProduct.error instanceof Error
+                  ? updateProduct.error.message
+                  : String(updateProduct.error ?? "Something went wrong"))}
+            </p>
+          )}
           <form onSubmit={handleEditSubmit} className="space-y-3  ">
             <div className="space-y-2 ">
               <Label htmlFor="edit-name">Name</Label>
@@ -620,7 +694,9 @@ export default function ProductListing() {
                       />
                     </div>
                     <div className="min-w-0 flex-1">
-                      <p className="text-xs text-muted-foreground">Selected from media</p>
+                      <p className="text-xs text-muted-foreground">
+                        Selected from media
+                      </p>
                       <Button
                         type="button"
                         variant="link"
@@ -763,16 +839,16 @@ export default function ProductListing() {
                     >
                       View PDF
                     </a>
-                    <p className="text-xs text-muted-foreground">Opens in new tab</p>
+                    <p className="text-xs text-muted-foreground">
+                      Opens in new tab
+                    </p>
                   </div>
                   <Button
                     type="button"
                     variant="ghost"
                     size="sm"
                     className="text-muted-foreground hover:text-destructive shrink-0"
-                    onClick={() =>
-                      setEditForm((p) => ({ ...p, pdfUrl: null }))
-                    }
+                    onClick={() => setEditForm((p) => ({ ...p, pdfUrl: null }))}
                     disabled={updateProduct.isPending}
                   >
                     <X className="h-4 w-4 mr-1" />
@@ -788,7 +864,9 @@ export default function ProductListing() {
                   onClick={() => setPdfPickerFor("edit")}
                   disabled={updateProduct.isPending}
                 >
-                  {editForm.pdfUrl ? "Replace with media" : "Choose PDF from media"}
+                  {editForm.pdfUrl
+                    ? "Replace with media"
+                    : "Choose PDF from media"}
                 </Button>
                 <label className="inline-flex items-center justify-center gap-2 rounded-md border border-input bg-background px-4 py-2 text-sm cursor-pointer hover:bg-muted/50">
                   <input
@@ -863,7 +941,8 @@ export default function ProductListing() {
         onOpenChange={(open) => !open && setImagePickerFor(null)}
         value={imagePickerFor === "add" ? addForm.image : editForm.image}
         onSelect={(url) => {
-          if (imagePickerFor === "add") setAddForm((p) => ({ ...p, image: url }));
+          if (imagePickerFor === "add")
+            setAddForm((p) => ({ ...p, image: url }));
           else setEditForm((p) => ({ ...p, image: url }));
           setImagePickerFor(null);
         }}
@@ -875,9 +954,14 @@ export default function ProductListing() {
         kind="pdf"
         open={pdfPickerFor !== null}
         onOpenChange={(open) => !open && setPdfPickerFor(null)}
-        value={pdfPickerFor === "add" ? addForm.pdfUrl ?? null : editForm.pdfUrl ?? null}
+        value={
+          pdfPickerFor === "add"
+            ? (addForm.pdfUrl ?? null)
+            : (editForm.pdfUrl ?? null)
+        }
         onSelect={(url) => {
-          if (pdfPickerFor === "add") setAddForm((p) => ({ ...p, pdfUrl: url }));
+          if (pdfPickerFor === "add")
+            setAddForm((p) => ({ ...p, pdfUrl: url }));
           else setEditForm((p) => ({ ...p, pdfUrl: url }));
           setPdfPickerFor(null);
         }}
