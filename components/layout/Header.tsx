@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ModeToggle } from "../ThemeToggle";
 
-import { navLinks } from "./constant";
+import { navLinks, WEBSITE_LOGO } from "./constant";
 import MobileHeader from "./MobileHeader";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
@@ -27,11 +27,11 @@ export default function Header() {
         {/* Logo */}
         <Link href="/" className="flex items-center">
           <Image
-            src="/jcblogo.png"
+            src={WEBSITE_LOGO}
             alt="JCV Parts Logo"
-            width={180}
-            height={60}
-            className="h-16 w-auto object-contain"
+            width={1000}
+            height={1000}
+            className="h-20 w-40 object-contain"
             priority
           />
         </Link>

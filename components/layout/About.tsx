@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "../ui/button";
+import { WEBSITE_LOGO } from "./constant";
 
 export default function About() {
   return (
@@ -8,7 +9,7 @@ export default function About() {
       {/* Logo */}
       <div className="flex justify-center md:justify-start md:w-1/3">
         <Image
-          src="/jcblogo.png" // adjust if needed
+          src={WEBSITE_LOGO} // adjust if needed
           alt="NIKS Spare Parts Logo"
           width={1000}
           height={1000}

@@ -2,7 +2,6 @@ import {
     FaAward,
     FaHandsHelping,
     FaBullhorn,
-    FaMapMarkedAlt,
     FaUsers,
     FaShieldAlt
 } from "react-icons/fa";
@@ -83,7 +82,7 @@ export const benefits = [
 ]
 
 export const WEBSITE_NAME = "JCV Parts";
-export const WEBSITE_LOGO = "/jcblogo.png";
+export const WEBSITE_LOGO = "/logo1.jpeg";
 
 export const DASHBOARD_MENU_ITEMS = [
 

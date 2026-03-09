@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import { navLinks } from "./constant";
+import { navLinks, WEBSITE_LOGO } from "./constant";
 import NewsletterForm from "./NewsletterForm";
 import { Mail, Map, Phone } from "lucide-react";
 import { usePathname } from "next/navigation";
@@ -23,11 +23,11 @@ export default function Footer() {
               className="inline-flex focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-md"
             >
               <Image
-                src="/jcblogo.png"
+                src={WEBSITE_LOGO}
                 alt="Niks Spares – JCB Parts"
-                width={140}
-                height={140}
-                className="h-24 w-auto object-contain rounded-md"
+                width={1000}
+                height={1000}
+                className="h-20 w-60 object-contain rounded-md"
               />
             </Link>
             <p className="text-sm text-muted-foreground leading-relaxed max-w-xs">
