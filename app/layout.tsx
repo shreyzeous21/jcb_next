@@ -51,7 +51,7 @@ export const metadata: Metadata = {
 
   icons: {
     icon: "/logo1.jpeg",
-    apple: "/jcblogo.png",
+    apple: "/logo1.jpeg",
   },
 
   openGraph: {
