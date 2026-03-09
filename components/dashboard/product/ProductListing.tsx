@@ -276,7 +276,7 @@ export default function ProductListing() {
             )}
             <form
               onSubmit={handleAddSubmit}
-              className="space-y-4 h-[400px] overflow-y-auto"
+              className="space-y-4 h-[500px] overflow-y-auto"
             >
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
