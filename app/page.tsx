@@ -3,6 +3,7 @@ import Benefits from "@/components/layout/Benefits";
 import CategoryListHome from "@/components/layout/CategoryListHome";
 import HomeBanner from "@/components/layout/HomeBanner";
 import StatsSection from "@/components/layout/StatsSection";
+import RandomProductListing from "@/components/shop/RandomProductListing";
 import PhotonBeam from "@/components/ui/photon-beam";
 import React from "react";
 
@@ -40,6 +41,7 @@ export default function Home() {
           </p>
         </div>
       </section>
+      <RandomProductListing />
       <About />
       {/* <CategoryListHome /> */}
       <Benefits />
