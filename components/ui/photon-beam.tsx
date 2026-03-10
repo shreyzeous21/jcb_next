@@ -135,7 +135,7 @@ export default function PhotonBeam(props: PhotonBeamProps = {}) {
         scene.fog = new THREE.FogExp2(params.colorBg, 0.002);
       }
 
-      const camera = new THREE.PerspectiveCamera(45, width / height, 1, 1000);
+      const camera = new THREE.PerspectiveCamera(35, width / height, 1, 1000);
       camera.position.set(0, 0, 90);
       camera.lookAt(0, 0, 0);
 
