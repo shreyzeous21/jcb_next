@@ -21,14 +21,14 @@ export default function About() {
       {/* Content */}
       <div className="flex flex-col gap-4 md:w-2/3">
         <h1 className="text-3xl font-bold tracking-tight">
-          WHY “NIKS SPARE PARTS”
+          WHY “NIKSPARE PARTS”
         </h1>
 
         <p className="text-muted-foreground">
-          Niks Spares is a worldwide quality supplier of new replacement parts
-          for JCB® equipment and engines. At NIKS SPARES, we not only offer
-          premium parts but also exceptional service, outstanding savings, and
-          fast, accurate order fulfillment.
+          Nikspares is a worldwide quality supplier of new replacement parts for
+          JCB® equipment and engines. At NIKSPARES, we not only offer premium
+          parts but also exceptional service, outstanding savings, and fast,
+          accurate order fulfillment.
         </p>
 
         <p className="text-muted-foreground">

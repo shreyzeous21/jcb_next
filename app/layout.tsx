@@ -17,15 +17,15 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://www.niksparts.com"),
 
   title: {
-    default: "Niks Spares | Quality JCB Spare Parts & Accessories",
+    default: "Niksparts | Quality JCB Spare Parts & Accessories",
     template: "%s | Niks Spares",
   },
 
   description:
-    "Niks Spares is a trusted platform for buying high-quality JCB spare parts and accessories at competitive prices across India.",
+    "Niksparts is a trusted platform for buying high-quality JCB spare parts and accessories at competitive prices across India.",
 
   keywords: [
-    "Niks Spares",
+    "Niksparts",
     "JCB Spare Parts",
     "Auto Parts India",
     "JCB Accessories",
@@ -33,9 +33,9 @@ export const metadata: Metadata = {
     "Automobile Parts Supplier",
   ],
 
-  authors: [{ name: "Niks Spares" }],
-  creator: "Niks Spares",
-  publisher: "Niks Spares",
+  authors: [{ name: "Niksparts" }],
+  creator: "Niksparts",
+  publisher: "Niksparts",
 
   robots: {
     index: true,
@@ -59,24 +59,24 @@ export const metadata: Metadata = {
     locale: "en_IN",
     url: "https://www.niksparts.com",
     siteName: "Niks Parts",
-    title: "Niks Parts | Quality Car Spare Parts & Accessories",
+    title: "Niksparts | Quality JCB Spare Parts & Accessories",
     description:
-      "Buy genuine car spare parts and accessories from Niks Parts. Trusted by customers across India.",
+      "Buy genuine JCB spare parts and accessories from Niksparts. Trusted by customers across India.",
     images: [
       {
         url: "/logo1.jpeg",
         width: 1200,
         height: 630,
-        alt: "Niks Parts - Car Spare Parts Platform",
+        alt: "Niksparts - JCB Spare Parts Platform",
       },
     ],
   },
 
   twitter: {
     card: "summary_large_image",
-    title: "Niks Parts | Quality Car Spare Parts",
+    title: "Niksparts | Quality JCB Spare Parts",
     description:
-      "Your trusted destination for car spare parts and accessories.",
+      "Your trusted destination for JCB spare parts and accessories.",
     images: ["/logo1.jpeg"],
     creator: "@niksparts", // optional
   },
