@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Button } from "../ui/button";
 import { WEBSITE_LOGO } from "./constant";
+import { Highlighter } from "@/components/ui/highlighter";
 
 export default function About() {
   return (
@@ -21,7 +22,10 @@ export default function About() {
       {/* Content */}
       <div className="flex flex-col gap-4 md:w-2/3">
         <h1 className="text-3xl font-bold tracking-tight">
-          WHY “NIKSPARE PARTS”
+          WHY{" "}
+          <Highlighter action="underline" color="#FF9800">
+            “NIKSPARE PARTS”
+          </Highlighter>
         </h1>
 
         <p className="text-muted-foreground">
@@ -31,8 +35,11 @@ export default function About() {
           accurate order fulfillment.
         </p>
 
-        <p className="text-muted-foreground">
-          Founded in 2023, our company follows the principle of
+        <p className="">
+          <Highlighter action="highlight" color="#FF9800">
+            Founded in 2023,
+          </Highlighter>{" "}
+          our company follows the principle of
           <span className="font-medium text-foreground">
             {" "}
             quality first, competitive pricing

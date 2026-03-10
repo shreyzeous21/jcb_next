@@ -109,6 +109,7 @@ export default function RootLayout({
             <Header />
             {children}
             <WhatsappButton />
+
             <Footer />
             <Toaster richColors position="top-right" />
           </ThemeProvider>
