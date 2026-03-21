@@ -31,23 +31,7 @@ export default function CategoryListing() {
   const categoryFromUrl = searchParams.get("category") ?? "";
 
   const [stockStatus, setStockStatus] = useState("in-stock");
-  const [categoryId, setCategoryIdState] = useState(categoryFromUrl);
-
-  // Sync category filter when URL changes (e.g. coming from home category link)
-  useEffect(() => {
-    setCategoryIdState(categoryFromUrl);
-  }, [categoryFromUrl]);
-
-  const setCategoryId = (id: string) => {
-    setCategoryIdState(id);
-    const params = new URLSearchParams(searchParams.toString());
-    if (id) params.set("category", id);
-    else params.delete("category");
-    const query = params.toString();
-    router.replace(query ? `${pathname}?${query}` : pathname, {
-      scroll: false,
-    });
-  };
+  const [categoryId, setCategoryIdState] = useState("");
 
   const {
     products,
@@ -55,6 +39,32 @@ export default function CategoryListing() {
     error: productsError,
   } = useProduct();
   const { categories } = useCategory();
+
+  // Resolve category name from URL to ID once categories are loaded
+  useEffect(() => {
+    if (categoryFromUrl && categories.length > 0) {
+      const matched = categories.find(
+        (c) =>
+          c.name.toLowerCase() ===
+          categoryFromUrl.replace(/_/g, " ").toLowerCase() 
+      );
+      setCategoryIdState(matched?.id ?? "");
+    } else {
+      setCategoryIdState("");
+    }
+  }, [categoryFromUrl, categories]);
+
+  const setCategoryId = (id: string) => {
+    setCategoryIdState(id);
+    const params = new URLSearchParams(searchParams.toString());
+    const categoryName = categories.find((c) => c.id === id)?.name ?? "";
+    if (categoryName) params.set("category", categoryName.replace(/ /g, "_"));
+    else params.delete("category");
+    const query = params.toString();
+    router.replace(query ? `${pathname}?${query}` : pathname, {
+      scroll: false,
+    });
+  };
 
   const filteredProducts = useMemo(() => {
     return products.filter((product) => {
