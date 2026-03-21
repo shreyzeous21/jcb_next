@@ -6,6 +6,7 @@ import { Toaster } from "@/components/ui/sonner";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import WhatsappButton from "@/components/WhatsappButton";
+import PhoneFloatingButton from "@/components/PhoneFloatingButton";
 import QueryProvider from "./QueryProvider";
 
 const geistSans = Geist({
@@ -109,6 +110,7 @@ export default function RootLayout({
             <Header />
             {children}
             <WhatsappButton />
+            <PhoneFloatingButton />
 
             <Footer />
             <Toaster richColors position="top-right" />

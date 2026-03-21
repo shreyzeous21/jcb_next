@@ -36,7 +36,12 @@ export const auth = betterAuth({
       role: {
         type: ["SUPERADMIN", "ADMIN", "USER"],
         input: false,
-      }
+      },
+      phone: {
+        type: "string",
+        required: false,
+        input: true,
+      },
     }
   },
 
