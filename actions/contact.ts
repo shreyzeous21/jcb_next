@@ -76,3 +76,15 @@ export async function getContacts() {
         return { success: false, error: "Failed to get contacts" };
     }
 }
+
+export async function deleteContact(id: string) {
+    try {
+        await prisma.contact.delete({
+            where: { id },
+        });
+        return { success: true };
+    } catch (error) {
+        console.error("Delete contact error:", error);
+        return { success: false, error: "Failed to delete contact" };
+    }
+}

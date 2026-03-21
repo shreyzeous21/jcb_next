@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table,
@@ -19,7 +20,7 @@ function formatDate(date: Date) {
 }
 
 export default function ContactListing() {
-  const { contacts, isLoading, error } = useContact();
+  const { contacts, isLoading, error, deleteContactMutation } = useContact();
 
   return (
     <Card>
@@ -35,13 +36,14 @@ export default function ContactListing() {
               <TableHead>Phone</TableHead>
               <TableHead>Message</TableHead>
               <TableHead className="whitespace-nowrap">Submitted</TableHead>
+              <TableHead className="w-[80px]">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {isLoading && (
               <TableRow>
                 <TableCell
-                  colSpan={5}
+                  colSpan={6}
                   className="text-center py-8 text-muted-foreground"
                 >
                   Loading…
@@ -51,7 +53,7 @@ export default function ContactListing() {
             {error && (
               <TableRow>
                 <TableCell
-                  colSpan={5}
+                  colSpan={6}
                   className="text-center py-8 text-destructive"
                 >
                   Error: {error.message}
@@ -61,7 +63,7 @@ export default function ContactListing() {
             {!isLoading && !error && contacts.length === 0 && (
               <TableRow>
                 <TableCell
-                  colSpan={5}
+                  colSpan={6}
                   className="text-center py-8 text-muted-foreground"
                 >
                   No contact submissions yet.
@@ -82,6 +84,11 @@ export default function ContactListing() {
                   </TableCell>
                   <TableCell className="text-muted-foreground text-sm whitespace-nowrap">
                     {formatDate(contact.createdAt)}
+                  </TableCell>
+                  <TableCell className="text-muted-foreground text-sm whitespace-nowrap">
+                    <Button variant="destructive" size="sm" onClick={() => deleteContactMutation.mutate(contact.id)}>
+                      Delete
+                    </Button>
                   </TableCell>
                 </TableRow>
               ))}
