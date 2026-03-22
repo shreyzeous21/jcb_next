@@ -30,7 +30,7 @@ export default function ProductCard({
                  hover:ring-1 hover:ring-primary/20"
     >
       {/* IMAGE */}
-      <div className="relative aspect-square w-full overflow-hidden rounded-xl bg-muted">
+      <div className="relative aspect-video w-full overflow-hidden rounded-xl bg-muted">
         <Image
           src={product.image}
           alt={product.name}

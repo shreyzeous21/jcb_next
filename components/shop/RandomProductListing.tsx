@@ -7,8 +7,12 @@ import ProductCard, { type ProductCardProduct } from "./ProductCard";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { ShoppingBag } from "lucide-react";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Pagination, Autoplay } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/pagination";
 
-const RANDOM_COUNT = 3;
+const RANDOM_COUNT = 6;
 
 function shuffle<T>(arr: T[]): T[] {
   const out = [...arr];
@@ -45,12 +49,12 @@ export default function RandomProductListing() {
 
   if (isLoading) {
     return (
-      <section className="mx-auto w-full max-w-3xl px-4">
+      <section className="mx-auto w-full px-4">
         <div className="mb-3 flex items-center justify-between">
-          <Skeleton className="h-6 w-20" />
+          <Skeleton className="h-6 w-36" />
         </div>
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {Array.from({ length: 3 }).map((_, i) => (
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+          {Array.from({ length: 6 }).map((_, i) => (
             <ProductCardSkeleton key={i} />
           ))}
         </div>
@@ -75,20 +79,42 @@ export default function RandomProductListing() {
   }));
 
   return (
-    <section className="mx-auto w-full  px-4">
-      <div className="mb-3 flex items-center justify-between">
+    <section className="mx-auto w-full px-4">
+      <div className="mb-4 flex items-center justify-between">
         <h2 className="text-lg font-semibold tracking-tight text-foreground">
           Featured Products
         </h2>
       </div>
 
-      <div className="flex flex-wrap gap-4">
+      {/* Mobile: Swiper carousel */}
+      <div className="block sm:hidden pb-8">
+        <Swiper
+          modules={[Pagination, Autoplay]}
+          slidesPerView={1.2}
+          spaceBetween={12}
+          centeredSlides={false}
+          pagination={{ clickable: true }}
+          autoplay={{ delay: 3000, disableOnInteraction: false }}
+          className="pb-8!"
+        >
+          {cardProducts.map((product) => (
+            <SwiperSlide key={product.id} className="h-auto">
+              <div className="h-full">
+                <ProductCard product={product} />
+              </div>
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      </div>
+
+      {/* Tablet / Desktop: equal grid */}
+      <div className="hidden sm:grid sm:grid-cols-3 gap-4">
         {cardProducts.map((product) => (
           <ProductCard key={product.id} product={product} />
         ))}
       </div>
 
-      <div className="mt-4 flex justify-center">
+      <div className="mt-6 flex justify-center">
         <Button
           asChild
           size="sm"
