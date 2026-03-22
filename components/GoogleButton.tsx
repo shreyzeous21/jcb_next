@@ -35,7 +35,7 @@ export default function GoogleButton() {
       onClick={handleGoogleSignIn}
       variant="outline"
       disabled={loading}
-      className=" flex items-center justify-center gap-2"
+      className=" flex w-full items-center justify-center gap-2"
     >
       {loading ? (
         <Loader2 className="h-4 w-4 animate-spin" />

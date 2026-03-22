@@ -61,7 +61,7 @@ export default function MobileHeader({
         <SheetFooter className="flex flex-col gap-4 border-t border-primary pt-4">
           {/* Theme Toggle */}
           <div className="flex items-center justify-between">
-            <ModeToggle />
+            {/* <ModeToggle /> */}
             {!session?.user ? <GoogleButton /> : <LogoutButton />}
           </div>
 

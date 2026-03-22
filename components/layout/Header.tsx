@@ -54,7 +54,7 @@ export default function Header() {
         </nav>
 
         <div className="hidden md:flex space-x-2">
-          <ModeToggle />
+          {/* <ModeToggle /> */}
           {!session?.user ? <GoogleButton /> : <LogoutButton />}
         </div>
 
