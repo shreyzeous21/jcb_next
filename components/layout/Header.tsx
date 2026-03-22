@@ -23,7 +23,7 @@ export default function Header() {
   return (
     <div className="sticky top-0 z-50 w-full">
       <TopHeader />
-      <header className=" mx-auto flex h-18 items-center justify-between px-4 border-b-2 border-primary bg-background/80 backdrop-blur rounded-b-xl">
+      <header className=" mx-auto flex h-18 items-center justify-between px-4 border-b-2 border-primary bg-yellow-400 backdrop-blur rounded-b-xl">
         {/* Logo */}
         <Link href="/" className="flex items-center">
           <Image
