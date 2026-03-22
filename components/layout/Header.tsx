@@ -37,19 +37,27 @@ export default function Header() {
         </Link>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
+        <nav className="hidden md:flex items-center gap-4 text-sm font-medium">
           {navLinks.map((item) => (
-            <Link
-              key={item.name}
-              href={item.href}
-              className={cn(
-                "relative text-muted-foreground transition-colors hover:text-primary after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:w-0 after:bg-primary after:transition-all hover:after:w-full",
-                isActive(item.href) && "text-primary",
-                isActive(item.href) && "after:w-full",
-              )}
-            >
-              {item.name}
-            </Link>
+           <Link
+           key={item.name}
+           href={item.href}
+           className={cn(
+             "relative px-3 py-2 rounded-xl text-sm font-medium transition-all duration-300",
+         
+             // default state
+             "text-black hover:text-yellow-600",
+         
+             // hover underline (subtle)
+             "after:absolute after:-bottom-1 after:left-1/2 after:-translate-x-1/2 after:h-[2px] after:w-0 after:bg-yellow-500 after:transition-all hover:after:w-6",
+         
+             // 🔥 active glass effect
+             isActive(item.href) &&
+               "text-yellow-700 bg-white/40 backdrop-blur-md border border-yellow-300/40 shadow-md shadow-yellow-200/40 after:w-0"
+           )}
+         >
+           {item.name}
+         </Link>
           ))}
         </nav>
 
