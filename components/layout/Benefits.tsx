@@ -9,7 +9,7 @@ import { benefits } from "./constant";
 
 export default function Benefits() {
   return (
-    <Card className="w-full bg-background border-none">
+    <Card className="w-full bg-background border-none shadow-none">
       <CardHeader className="text-center space-y-2">
         <CardTitle className="text-3xl font-bold text-yellow-400">
           Benefits Of <span className="text-yellow-500">Niks Parts</span>

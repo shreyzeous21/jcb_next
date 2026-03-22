@@ -46,6 +46,31 @@ export async function updateUserRole(id: string, role: UserRole) {
             };
         }
 
+        const existingUser = await prisma.user.findUnique({
+            where: { id },
+            select: {
+                role: true, email: true
+            }
+        })
+
+        if (!existingUser) {
+            return {
+                success: false,
+                error: "User not found",
+            };
+        }
+
+        if (existingUser.role === "SUPERADMIN") {
+            const ALLOWED_SUPER_ADMIN_EMAIL = process.env.ADMIN_EMAILS as string;
+
+            if (existingUser.email !== ALLOWED_SUPER_ADMIN_EMAIL) {
+                return {
+                    success: false,
+                    error: "You cannot change a Super Admin's role",
+                };
+            }
+        }
+
         const user = await prisma.user.update({
             where: { id },
             data: { role },
